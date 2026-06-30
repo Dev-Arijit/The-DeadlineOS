@@ -295,19 +295,20 @@ GEMINI_API_KEY=YOUR_KEY
 
 Add screenshots here
 
-```
 /screenshots
 
-dashboard.png
+Dashboard:
+<img width="1898" height="914" alt="image" src="https://github.com/user-attachments/assets/130c581c-70df-4dcc-ac52-84c0084ded25" />
 
-calendar.png
+Calendar:
+<img width="1898" height="913" alt="image" src="https://github.com/user-attachments/assets/2f9a8c2a-1266-464f-8dd3-38cef9d953d9" />
 
-ai-strategist.png
+Focus Mode:
+<img width="1919" height="910" alt="image" src="https://github.com/user-attachments/assets/814ea06f-14bc-4b0f-8641-3096b3b6352d" />
 
-focus-mode.png
+Priority-list:
+<img width="1899" height="909" alt="image" src="https://github.com/user-attachments/assets/7f3d9c2d-64ba-4675-988c-630623c60484" />
 
-priority-list.png
-```
 
 ---
 
