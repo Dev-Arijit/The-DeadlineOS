@@ -293,10 +293,6 @@ GEMINI_API_KEY=YOUR_KEY
 
 # 📸 Screenshots
 
-Add screenshots here
-
-```
-/screenshots
 
 Dashboard:
 <img width="1900" height="910" alt="image" src="https://github.com/user-attachments/assets/dde415a9-5293-46b9-aa39-3e1fc79d3d6a" />
@@ -313,7 +309,6 @@ AI Strategist:
 Focus-Mode:
 <img width="1919" height="911" alt="image" src="https://github.com/user-attachments/assets/9c10213c-3a5d-4aed-a522-8d6c2c54c2b8" />
 
-```
 
 ---
 
