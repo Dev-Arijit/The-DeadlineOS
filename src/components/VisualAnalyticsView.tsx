@@ -15,7 +15,8 @@ import {
   RotateCcw,
   ChevronUp,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  Sparkles
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Mission, Task } from '../types';
@@ -37,6 +38,295 @@ export function VisualAnalyticsView({
   const [hoveredIndex, setHoveredIndex] = useState<string | null>(null);
   const [expandedTasks, setExpandedTasks] = useState<Record<string, boolean>>({});
   const updateTaskStatus = useMissionStore((state) => state.updateTaskStatus);
+  const sortedUpcomingTasks = useMissionStore((state) => state.sortedUpcomingTasks);
+
+  const [taskFilter, setTaskFilter] = useState<'all' | 'today' | 'tomorrow' | 'this_week' | 'high_risk' | 'current_mission' | 'overdue'>('all');
+
+  const formatSafeDate = (isoString?: string) => {
+    if (!isoString) return 'Flexible Target';
+    try {
+      const d = new Date(isoString);
+      if (isNaN(d.getTime())) return isoString;
+      return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+    } catch {
+      return isoString || 'Flexible Target';
+    }
+  };
+
+  const renderTaskCard = (task: any, isFeatured = false) => {
+    const targetMissionId = task.parentMissionId || (activeMission?.id || '');
+    const isCompleted = task.status === 'completed';
+    const isSkipped = task.status === 'skipped';
+    const isMissed = task.status === 'missed';
+    const isDelayed = task.status === 'delayed';
+    const isTaskExpanded = expandedTasks[task.id] ?? false;
+
+    // Get color based on priority: Red for critical, Orange for high, Yellow for medium, Green for low
+    const getPriorityColorBar = (priority: string) => {
+      switch (priority?.toLowerCase()) {
+        case 'critical': return 'bg-rose-500';
+        case 'high': return 'bg-orange-500';
+        case 'medium': return 'bg-yellow-500';
+        case 'low': return 'bg-emerald-500';
+        default: return 'bg-slate-700';
+      }
+    };
+
+    const getRiskColorClass = (risk: string) => {
+      switch (risk?.toLowerCase()) {
+        case 'critical':
+          return 'bg-rose-950/25 text-rose-400 border-rose-900/30';
+        case 'high':
+        case 'very high':
+          return 'bg-orange-950/25 text-orange-400 border-orange-900/30';
+        case 'medium':
+          return 'bg-yellow-950/25 text-yellow-400 border-yellow-900/30';
+        case 'low':
+          return 'bg-emerald-950/25 text-emerald-400 border-emerald-900/30';
+        default:
+          return 'bg-slate-900/50 text-slate-400 border-slate-800';
+      }
+    };
+
+    return (
+      <div
+        key={`${targetMissionId}-${task.id}`}
+        className={`flex items-stretch border rounded-xl hover:border-slate-800 transition-all duration-300 group relative overflow-hidden ${
+          isFeatured 
+            ? 'bg-gradient-to-br from-slate-950 via-slate-950 to-teal-950/15 border-teal-500/30 shadow-[0_0_20px_rgba(20,184,166,0.12)] hover:border-teal-500/50 scale-[1.01]' 
+            : 'bg-slate-950/40 border-slate-900 hover:bg-slate-950/70 hover:translate-y-[-1px]'
+        } ${
+          isCompleted ? 'opacity-60 border-emerald-500/20' : ''
+        }`}
+      >
+        {/* Left Priority Color Bar */}
+        <div className={`w-1.5 shrink-0 ${getPriorityColorBar(task.priority)}`} />
+
+        {/* Main Card Content */}
+        <div className="flex-1 p-4 flex flex-col justify-between gap-3 min-w-0">
+          
+          {/* Top/Main Row */}
+          <div className="flex items-start justify-between gap-4">
+            
+            {/* Left side: Checkbox, Task Name, Mission Name */}
+            <div className="flex items-start gap-3 min-w-0">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const nextS = isCompleted ? 'todo' : 'completed';
+                  updateTaskStatus(targetMissionId, task.id, nextS);
+                }}
+                className={`w-5 h-5 rounded border bg-slate-950 flex items-center justify-center cursor-pointer transition shrink-0 mt-1 ${
+                  isCompleted 
+                    ? 'bg-emerald-500 border-emerald-500 text-slate-950 font-black text-[9px]' 
+                    : 'border-slate-800 hover:border-teal-500/60'
+                }`}
+              >
+                {isCompleted && "✓"}
+              </button>
+              
+              <div className="min-w-0">
+                <h4 
+                  className={`font-bold tracking-tight text-white truncate font-sans ${
+                    isFeatured ? 'text-[18px] md:text-[20px] leading-snug' : 'text-[15px] md:text-[17px] leading-snug'
+                  } ${isCompleted ? 'text-slate-400 line-through' : ''}`}
+                  title={task.name}
+                >
+                  {task.name}
+                </h4>
+                
+                <p className="text-[13px] md:text-[14px] text-slate-400 font-medium mt-1 flex items-center gap-1.5 truncate">
+                  <span className="text-slate-600 font-mono text-[11px]">📁</span>
+                  <span className="truncate">{task.parentMissionTitle || 'Direct Task'}</span>
+                </p>
+              </div>
+            </div>
+
+            {/* Right side: Remaining Time & Duration & Play button */}
+            <div className="flex items-center gap-4 shrink-0">
+              <div className="text-right hidden sm:block">
+                <div className="text-xs font-mono font-bold text-teal-400 bg-teal-500/5 px-2 py-0.5 rounded border border-teal-500/10">
+                  ⏳ {task.durationMinutes} min
+                </div>
+                {task.timeRemainingStr && (
+                  <div className="text-[11px] font-mono text-slate-500 mt-1 font-semibold">
+                    {task.timeRemainingStr}
+                  </div>
+                )}
+              </div>
+
+              {/* Action row */}
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onStartFocusSession && onStartFocusSession(task);
+                  }}
+                  className={`px-3 py-1.5 bg-teal-500 hover:bg-teal-400 text-slate-950 rounded-lg transition-all cursor-pointer flex items-center gap-1 font-mono text-[10px] font-extrabold select-none ${
+                    isFeatured ? 'shadow-[0_0_12px_rgba(20,184,166,0.25)]' : ''
+                  }`}
+                >
+                  ▶ Start
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setExpandedTasks(prev => ({ ...prev, [task.id]: !prev[task.id] }));
+                  }}
+                  title="More Options"
+                  className="p-1.5 bg-slate-900/80 hover:bg-slate-800 text-slate-400 border border-slate-850 hover:border-slate-700 rounded-lg transition-all cursor-pointer"
+                >
+                  ⋮
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Bottom Row */}
+          <div className="flex flex-wrap items-center justify-between pt-2.5 border-t border-slate-900/65 text-xs text-slate-400 gap-3">
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Deadline */}
+              {task.parentMissionDeadline && (
+                <span className="flex items-center gap-1 text-[11px] font-mono text-slate-400">
+                  📅 {formatSafeDate(task.parentMissionDeadline)}
+                </span>
+              )}
+
+              {/* Risk Badge */}
+              {task.parentMissionRiskLevel && (
+                <span className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded border ${getRiskColorClass(task.parentMissionRiskLevel)}`}>
+                  ⚠️ {task.parentMissionRiskLevel} Risk
+                </span>
+              )}
+
+              {/* Dependencies Icon */}
+              {task.dependencies && task.dependencies.length > 0 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setExpandedTasks(prev => ({ ...prev, [task.id]: !prev[task.id] }));
+                  }}
+                  className="flex items-center gap-1 text-[11px] font-mono text-purple-400 hover:text-purple-300 font-bold bg-purple-500/5 border border-purple-500/10 px-1.5 py-0.2 rounded"
+                  title="Click to view dependency details"
+                >
+                  🔗 {task.dependencies.length}
+                </button>
+              )}
+
+              {/* Mobile inline Duration */}
+              <div className="sm:hidden text-right">
+                <span className="text-[10px] font-mono font-bold text-teal-400 bg-teal-500/5 px-1.5 py-0.2 rounded border border-teal-500/10">
+                  ⏳ {task.durationMinutes}m
+                </span>
+              </div>
+            </div>
+
+            {/* AI Score confidence indicator */}
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider font-bold">AI Priority</span>
+              <div className="flex items-center gap-2">
+                <div className="w-16 h-1.5 bg-slate-900 rounded-full overflow-hidden border border-slate-850 p-0.2">
+                  <div 
+                    className="h-full bg-gradient-to-r from-teal-500 to-emerald-400 rounded-full transition-all duration-500"
+                    style={{ width: `${task.importanceScore || 75}%` }}
+                  />
+                </div>
+                <span className="text-[10px] font-mono font-bold text-teal-400">
+                  {task.importanceScore || 75}%
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* More details drawer inside card */}
+          <AnimatePresence initial={false}>
+            {isTaskExpanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden border-t border-slate-900/65 pt-3 text-xs space-y-3"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider block mb-1">Description</span>
+                    <p className="text-slate-350 leading-relaxed font-sans text-xs">
+                      {task.description || "No description provided."}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <div>
+                      <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider block mb-1">ESTIMATED DURATION</span>
+                      <p className="text-slate-300 font-mono text-xs">
+                        ⏱️ {task.durationMinutes} minutes
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider block mb-1">DEPENDENCIES</span>
+                      <p className="text-slate-350 font-sans text-xs">
+                        {task.dependencies && task.dependencies.length > 0 ? (
+                          <span className="text-purple-400 font-mono text-[10px] leading-relaxed">
+                            Requires: {task.dependencies.map(depId => {
+                              const pm = missions.find(m => m.id === targetMissionId) || activeMission;
+                              const tName = pm?.tasks.find(tk => tk.id === depId)?.name || depId;
+                              return `"${tName}"`;
+                            }).join(', ')}
+                          </span>
+                        ) : (
+                          <span className="text-slate-500 italic">None (Ready to execute)</span>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {task.reasoning && (
+                  <div className="bg-[#0E152B]/45 border border-[#1C2C57]/30 p-2.5 rounded-lg">
+                    <span className="text-[9px] font-mono text-teal-400 uppercase tracking-wider block mb-1 font-bold">🤖 AI reasoning</span>
+                    <p className="text-slate-300 italic leading-relaxed text-[11px] font-sans">
+                      " {task.reasoning} "
+                    </p>
+                  </div>
+                )}
+
+                {/* Combined task management actions tucked inside More */}
+                <div className="flex flex-wrap gap-2 pt-2.5 border-t border-slate-900/80">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      updateTaskStatus(targetMissionId, task.id, 'skipped');
+                    }}
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-900/60 hover:bg-slate-850 text-slate-400 hover:text-slate-200 border border-slate-850 hover:border-slate-755 rounded-lg transition-all cursor-pointer text-[10px] font-mono font-bold uppercase select-none"
+                  >
+                    <RotateCcw className="w-3 h-3" /> Skip
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      updateTaskStatus(targetMissionId, task.id, 'delayed');
+                    }}
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-900/60 hover:bg-slate-850 text-amber-500/80 hover:text-amber-400 border border-slate-850 hover:border-amber-900/30 rounded-lg transition-all cursor-pointer text-[10px] font-mono font-bold uppercase select-none"
+                  >
+                    <Clock className="w-3 h-3" /> Delay
+                  </button>
+                  {onFetchTaskStrategy && (
+                    <button
+                      onClick={() => onFetchTaskStrategy(task)}
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 bg-teal-500/5 hover:bg-teal-500/10 text-teal-400 hover:text-teal-300 border border-teal-500/15 hover:border-teal-500/30 rounded-lg transition-all cursor-pointer text-[10px] font-mono font-bold uppercase select-none"
+                    >
+                      <Sparkles className="w-3 h-3 text-teal-400" /> AI Strategy
+                    </button>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    );
+  };
 
   // Fallback / standard metrics if no mission active
   const totalMissions = missions.length;
@@ -60,28 +350,20 @@ export function VisualAnalyticsView({
     }
   }
 
-  // Gather all tasks from either the parallel active missions or the single active mission
-  let displayTasks: (Task & { parentMissionId?: string; parentMissionTitle?: string })[] = [];
+  // Gather all tasks from all active missions (Requested global task priority engine)
+  let displayTasks: (Task & { parentMissionId?: string; parentMissionTitle?: string; parentMissionDeadline?: string; parentMissionRiskLevel?: string })[] = [];
 
-  if (isParallelMode) {
-    parallelMissions.forEach(m => {
-      m.tasks.forEach(t => {
-        displayTasks.push({
-          ...t,
-          parentMissionId: m.id,
-          parentMissionTitle: m.title || m.goal
-        });
-      });
-    });
-  } else if (activeMission) {
-    activeMission.tasks.forEach(t => {
+  missions.filter(m => m.status === 'active').forEach(m => {
+    m.tasks.forEach(t => {
       displayTasks.push({
         ...t,
-        parentMissionId: activeMission.id,
-        parentMissionTitle: activeMission.title || activeMission.goal
+        parentMissionId: m.id,
+        parentMissionTitle: m.title || m.goal,
+        parentMissionDeadline: m.deadline,
+        parentMissionRiskLevel: m.riskLevel || 'Low'
       });
     });
-  }
+  });
 
   const completedTasks = displayTasks.filter(t => t.status === 'completed');
   const skippedTasks = displayTasks.filter(t => t.status === 'skipped');
@@ -175,43 +457,63 @@ export function VisualAnalyticsView({
     return Math.min(100, Math.max(5, score));
   };
 
-  // Upcoming / active tasks in this mission / all active missions
-  const upcomingTasks = displayTasks
-    .filter(t => t && t.status !== 'completed' && t.status !== 'skipped' && t.status !== 'missed')
-    .map(t => {
-      // Find the mission this task belongs to
-      const pm = missions.find(m => m.id === t.parentMissionId) || activeMission;
-      const score = calculateImportanceScore(t, pm);
-      return {
-        ...t,
-        importanceScore: score,
-      };
-    })
-    .sort((a, b) => {
-      // 1. Priority level weight (high -> medium -> low)
-      const pWeights = { high: 3, medium: 2, low: 1 };
-      const pA = pWeights[a.priority] || 2;
-      const pB = pWeights[b.priority] || 2;
-      if (pA !== pB) return pB - pA;
+  // Filter list of tasks based on the active sticky filter chip
+  const filteredTasks = (sortedUpcomingTasks || []).filter((t) => {
+    // Only show incomplete/todo/delayed tasks
+    if (t.status !== 'todo' && t.status !== 'delayed') return false;
 
-      // 2. Importance Score
-      if (b.importanceScore !== a.importanceScore) {
-        return b.importanceScore - a.importanceScore;
-      }
+    const deadlineTime = t.parentMissionDeadline ? new Date(t.parentMissionDeadline).getTime() : 0;
+    const msRemaining = deadlineTime - Date.now();
+    const hoursRemaining = msRemaining / (1000 * 60 * 60);
 
-      // 3. Dependencies length (tasks with more dependencies or depend on more tasks first)
-      const depA = a.dependencies?.length || 0;
-      const depB = b.dependencies?.length || 0;
-      if (depA !== depB) return depB - depA;
+    switch (taskFilter) {
+      case 'today':
+        return hoursRemaining >= 0 && hoursRemaining <= 24;
+      case 'tomorrow':
+        return hoursRemaining > 24 && hoursRemaining <= 48;
+      case 'this_week':
+        return hoursRemaining >= 0 && hoursRemaining <= 168;
+      case 'high_risk':
+        return t.parentMissionRiskLevel === 'Critical' || t.parentMissionRiskLevel === 'Very High' || t.parentMissionRiskLevel === 'High';
+      case 'current_mission':
+        return activeMission ? t.parentMissionId === activeMission.id : true;
+      case 'overdue':
+        return hoursRemaining < 0;
+      case 'all':
+      default:
+        return true;
+    }
+  });
 
-      // 4. Duration (shorter first)
-      if (a.durationMinutes !== b.durationMinutes) {
-        return a.durationMinutes - b.durationMinutes;
-      }
+  const getGroup = (t: any) => {
+    if (!t.parentMissionDeadline) return 'Later / Flexible';
+    const deadlineTime = new Date(t.parentMissionDeadline).getTime();
+    const msRemaining = deadlineTime - Date.now();
+    const hoursRemaining = msRemaining / (1000 * 60 * 60);
 
-      // 5. Original Order
-      return (a.order ?? 0) - (b.order ?? 0);
-    });
+    if (hoursRemaining < 0) return 'Overdue';
+    if (hoursRemaining <= 24) return '🔥 Today';
+    if (hoursRemaining <= 48) return 'Tomorrow';
+    if (hoursRemaining <= 168) return 'Later This Week';
+    return 'Later / Flexible';
+  };
+
+  // Pull out the first task as "🔥 DO THIS NEXT" featured task
+  const featuredTask = filteredTasks[0] || null;
+  const remainingTasks = filteredTasks.slice(1);
+
+  const groupedTasks: Record<string, typeof filteredTasks> = {
+    'Overdue': [],
+    '🔥 Today': [],
+    'Tomorrow': [],
+    'Later This Week': [],
+    'Later / Flexible': []
+  };
+
+  remainingTasks.forEach(t => {
+    const grp = getGroup(t);
+    groupedTasks[grp].push(t);
+  });
 
   return (
     <div className="space-y-6">
@@ -383,20 +685,21 @@ export function VisualAnalyticsView({
             </div>
           </div>
         </div>
-
       </div>
 
-      {/* Upcoming Tasks Section (Requested Update) */}
+      {/* Upcoming Tasks Section (Redesigned) */}
       <div className="p-6 rounded-2xl border border-slate-900 bg-slate-900/30 backdrop-blur-md space-y-4">
+        
+        {/* Header Row */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-950 pb-3 gap-2">
           <div className="flex items-center gap-2">
             <ListTodo className="w-4 h-4 text-teal-400" />
             <h3 className="text-xs font-mono text-white font-bold uppercase tracking-wider">
-              {isParallelMode ? "Upcoming Tasks in Concurrent Streams" : "Upcoming Tasks in this Mission"}
+              Upcoming Focus Tasks
             </h3>
-            {(activeMission || isParallelMode) && upcomingTasks.length > 0 && (
+            {filteredTasks.length > 0 && (
               <span className="px-1.5 py-0.2 bg-teal-500/15 text-teal-400 text-[9px] rounded-full font-bold">
-                {upcomingTasks.length} left
+                {filteredTasks.length} left
               </span>
             )}
           </div>
@@ -405,236 +708,109 @@ export function VisualAnalyticsView({
           </span>
         </div>
 
-        {activeMission || isParallelMode ? (
-          upcomingTasks.length === 0 ? (
+        {/* Sticky Quick Task Filters */}
+        <div className="sticky top-0 z-10 bg-slate-950/90 backdrop-blur-md py-3 -mx-6 px-6 border-b border-slate-900/50 flex flex-wrap gap-1.5 items-center">
+          <span className="font-mono text-slate-500 uppercase text-[9px] mr-2 font-bold tracking-widest">Filter:</span>
+          <div className="flex flex-wrap gap-1.5">
+            {[
+              { value: 'all', label: 'All' },
+              { value: 'today', label: 'Today' },
+              { value: 'tomorrow', label: 'Tomorrow' },
+              { value: 'this_week', label: 'This Week' },
+              { value: 'high_risk', label: 'High Risk' },
+              { value: 'current_mission', label: 'Current Mission' },
+              { value: 'overdue', label: 'Overdue' }
+            ].map((chip) => {
+              const count = (sortedUpcomingTasks || []).filter((t) => {
+                if (t.status !== 'todo' && t.status !== 'delayed') return false;
+                const deadlineTime = t.parentMissionDeadline ? new Date(t.parentMissionDeadline).getTime() : 0;
+                const msRemaining = deadlineTime - Date.now();
+                const hoursRemaining = msRemaining / (1000 * 60 * 60);
+
+                if (chip.value === 'all') return true;
+                if (chip.value === 'today') return hoursRemaining >= 0 && hoursRemaining <= 24;
+                if (chip.value === 'tomorrow') return hoursRemaining > 24 && hoursRemaining <= 48;
+                if (chip.value === 'this_week') return hoursRemaining >= 0 && hoursRemaining <= 168;
+                if (chip.value === 'high_risk') return t.parentMissionRiskLevel === 'Critical' || t.parentMissionRiskLevel === 'Very High' || t.parentMissionRiskLevel === 'High';
+                if (chip.value === 'current_mission') return activeMission ? t.parentMissionId === activeMission.id : true;
+                if (chip.value === 'overdue') return hoursRemaining < 0;
+                return true;
+              }).length;
+
+              return (
+                <button
+                  key={chip.value}
+                  onClick={() => setTaskFilter(chip.value as any)}
+                  className={`px-3 py-1 rounded-full text-[11px] font-medium font-sans transition-all cursor-pointer select-none flex items-center gap-1.5 border ${
+                    taskFilter === chip.value
+                      ? 'bg-teal-500/10 text-teal-400 border-teal-500/30 shadow-[0_0_10px_rgba(20,184,166,0.05)] font-semibold'
+                      : 'bg-slate-900/40 text-slate-400 border-slate-850 hover:text-white hover:bg-slate-900 hover:border-slate-800'
+                  }`}
+                >
+                  {chip.label}
+                  <span className={`text-[9px] px-1 py-0.2 rounded-full ${
+                    taskFilter === chip.value 
+                      ? 'bg-teal-500/20 text-teal-300' 
+                      : 'bg-slate-950 text-slate-500'
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {activeMission || isParallelMode || filteredTasks.length > 0 ? (
+          filteredTasks.length === 0 ? (
             <div className="py-8 text-center space-y-2">
               <CheckCircle className="w-8 h-8 text-emerald-500/80 mx-auto" />
-              <p className="text-xs text-slate-400 font-sans">All tasks completed! You are fully up-to-date. 🎯</p>
+              <p className="text-xs text-slate-400 font-sans">No tasks found for this filter. 🎯</p>
             </div>
           ) : (
-            <div className="space-y-3 pt-2 max-h-[400px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
-              {upcomingTasks.map((task) => {
-                const targetMissionId = task.parentMissionId || (activeMission?.id || '');
-                const isCompleted = task.status === 'completed';
-                const isSkipped = task.status === 'skipped';
-                const isMissed = task.status === 'missed';
-                const isDelayed = task.status === 'delayed';
-                const isTaskExpanded = expandedTasks[task.id] ?? false;
+            <div className="space-y-6 pt-2 max-h-[550px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
+              
+              {/* Featured DO THIS NEXT Section */}
+              {featuredTask && (
+                <div className="space-y-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-mono font-bold text-amber-500 uppercase tracking-widest flex items-center gap-1">
+                      🔥 DO THIS NEXT
+                    </span>
+                    <div className="h-[1px] flex-1 bg-amber-500/10" />
+                  </div>
+                  <div className="relative">
+                    <div className="absolute top-0 right-0 bg-teal-500 text-slate-950 text-[9px] font-mono font-bold tracking-widest px-2.5 py-0.5 rounded-bl-lg uppercase flex items-center gap-1 shadow-md z-[2]">
+                      ✨ OPTIMAL FOCUS
+                    </div>
+                    {renderTaskCard(featuredTask, true)}
+                  </div>
+                </div>
+              )}
+
+              {/* Grouped Lists */}
+              {['Overdue', '🔥 Today', 'Tomorrow', 'Later This Week', 'Later / Flexible'].map((groupName) => {
+                const tasksInGroup = groupedTasks[groupName] || [];
+                if (tasksInGroup.length === 0) return null;
 
                 return (
-                  <div
-                    key={`${targetMissionId}-${task.id}`}
-                    className={`flex flex-col gap-3.5 p-4 bg-slate-950 border rounded-xl hover:border-slate-800 transition-all group relative ${
-                      isCompleted 
-                        ? 'border-emerald-500/20 opacity-60' 
-                        : isSkipped 
-                        ? 'border-slate-800/40 opacity-50' 
-                        : isMissed 
-                        ? 'border-rose-500/20 bg-rose-500/5' 
-                        : isDelayed 
-                        ? 'border-amber-500/20 bg-amber-500/5' 
-                        : 'border-slate-900'
-                    }`}
-                  >
-                    {/* Main Row */}
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full">
-                      <div className="flex items-center gap-3.5 min-w-0">
-                        {/* Status Check Button */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            const nextS = isCompleted ? 'todo' : 'completed';
-                            updateTaskStatus(targetMissionId, task.id, nextS);
-                          }}
-                          className={`w-5 h-5 rounded border bg-slate-950 flex items-center justify-center cursor-pointer transition shrink-0 ${
-                            isCompleted 
-                              ? 'bg-emerald-500 border-emerald-500 text-slate-950 font-black text-[9px]' 
-                              : isMissed
-                              ? 'bg-rose-500 border-rose-500 text-slate-950 font-black text-[9px]'
-                              : isDelayed
-                              ? 'bg-amber-500 border-amber-500 text-slate-950 font-black text-[9px]'
-                              : isSkipped
-                              ? 'bg-slate-700 border-slate-700 text-white font-black text-[9px]'
-                              : 'border-slate-800 hover:border-teal-400'
-                          }`}
-                        >
-                          {isCompleted ? "✓" : isMissed ? "✕" : isDelayed ? "⏳" : isSkipped ? "↷" : ""}
-                        </button>
-                        
-                        <div className="min-w-0">
-                          <p className={`text-xs font-bold leading-snug transition ${
-                            isCompleted ? 'text-slate-450 line-through' : 
-                            isSkipped ? 'text-slate-550 line-through' : 
-                            isMissed ? 'text-rose-400' : 
-                            isDelayed ? 'text-amber-300' : 'text-white'
-                          }`}>
-                            {task.name}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Colored badges / details for Priority, Time, Deadline */}
-                      <div className="flex flex-wrap items-center gap-3 sm:gap-4 shrink-0 w-full sm:w-auto justify-between sm:justify-end">
-                        <div className="flex items-center gap-2">
-                          {task.status !== 'todo' && (
-                            <span className={`inline-block px-1.5 py-0.5 rounded text-[8px] font-mono font-bold uppercase ${
-                              isCompleted 
-                                ? 'bg-emerald-950/20 text-emerald-400 border border-emerald-900/30' 
-                                : isDelayed
-                                ? 'bg-amber-950/20 text-amber-400 border border-amber-900/30'
-                                : isMissed
-                                ? 'bg-rose-950/20 text-rose-400 border border-rose-900/30'
-                                : 'bg-slate-900 text-slate-400 border border-slate-800'
-                            }`}>
-                              {isCompleted ? '🟢 Complete' : isDelayed ? '🟡 Delayed' : isMissed ? '🔴 Missed' : '⏭️ Skipped'}
-                            </span>
-                          )}
-                          <span className={`inline-block px-1.5 py-0.5 rounded text-[8px] font-mono font-bold uppercase ${
-                            task.priority === 'high' 
-                              ? 'bg-rose-950/20 text-rose-400 border border-rose-900/30' 
-                              : task.priority === 'medium'
-                              ? 'bg-amber-950/20 text-amber-400 border border-amber-900/30'
-                              : 'bg-teal-950/20 text-teal-400 border border-teal-900/30'
-                          }`}>
-                            {task.priority === 'high' ? '🔥 High' : task.priority === 'medium' ? '⚡ Medium' : '💤 Low'}
-                          </span>
-                          <span className="inline-block px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-teal-500/10 text-teal-300 border border-teal-500/20">
-                            🤖 AI SCORE: {(task as any).importanceScore || 75}/100
-                          </span>
-                          {task.dependencies && task.dependencies.length > 0 && (
-                            <span className="inline-block px-1.5 py-0.5 rounded text-[8px] font-mono font-bold bg-purple-500/10 text-purple-300 border border-purple-500/20 uppercase">
-                              🔗 DEP: {task.dependencies.length}
-                            </span>
-                          )}
-                          {isParallelMode && task.parentMissionTitle && (
-                            <span className="px-1.5 py-0.2 text-[9px] font-mono font-semibold bg-slate-900 border border-slate-850 text-slate-400 rounded truncate max-w-[150px]" title={task.parentMissionTitle}>
-                              📁 {task.parentMissionTitle}
-                            </span>
-                          )}
-                          {task.scheduledTime && (
-                            <span className="text-[9px] font-mono text-slate-500 uppercase">
-                              ⌛ {task.scheduledTime}
-                            </span>
-                          )}
-                          <span className="text-xs font-mono text-slate-400 font-bold">{task.durationMinutes}m</span>
-                        </div>
-
-                        {/* Action Buttons: Focus, Skip, Delay, and Accordion Toggle */}
-                        <div className="flex items-center gap-1.5">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onStartFocusSession && onStartFocusSession(task);
-                            }}
-                            title="Launch Zen Focus"
-                            className="p-1.5 bg-teal-500/10 hover:bg-teal-500/20 text-teal-400 border border-teal-500/20 hover:border-teal-400 rounded-lg transition cursor-pointer flex items-center justify-center select-none"
-                          >
-                            <PlayCircle className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              updateTaskStatus(targetMissionId, task.id, 'skipped');
-                            }}
-                            title="Skip Task"
-                            className="p-1.5 bg-slate-900 hover:bg-slate-800 text-slate-400 border border-slate-850 hover:border-slate-700 rounded-lg transition cursor-pointer flex items-center justify-center select-none"
-                          >
-                            <RotateCcw className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              updateTaskStatus(targetMissionId, task.id, 'delayed');
-                            }}
-                            title="Delay Task"
-                            className="p-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 hover:border-amber-400 rounded-lg transition cursor-pointer flex items-center justify-center select-none"
-                          >
-                            <Clock className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setExpandedTasks(prev => ({ ...prev, [task.id]: !prev[task.id] }));
-                            }}
-                            title={isTaskExpanded ? "Hide Details" : "Show Details"}
-                            className="p-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-850 hover:border-slate-700 rounded-lg transition cursor-pointer flex items-center justify-center ml-1 select-none"
-                          >
-                            {isTaskExpanded ? <ChevronUp className="w-3.5 h-3.5 text-teal-400 animate-pulse" /> : <ChevronDown className="w-3.5 h-3.5" />}
-                          </button>
-                        </div>
-                      </div>
+                  <div key={groupName} className="space-y-3 pt-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest">
+                        {groupName}
+                      </span>
+                      <div className="h-[1px] flex-1 bg-slate-900" />
+                      <span className="text-[9px] font-mono text-slate-500 font-semibold bg-slate-950/40 border border-slate-900 px-1.5 py-0.2 rounded-full">
+                        {tasksInGroup.length}
+                      </span>
                     </div>
-
-                    {/* Collapsible Accordion details */}
-                    <AnimatePresence initial={false}>
-                      {isTaskExpanded && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                          className="overflow-hidden border-t border-slate-900/65 pt-3.5 text-xs space-y-3"
-                        >
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                              <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider block mb-1">Description</span>
-                              <p className="text-slate-350 leading-relaxed font-sans text-xs">
-                                {task.description || "No description provided."}
-                              </p>
-                            </div>
-                            <div className="space-y-2">
-                              <div>
-                                <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider block mb-1">ESTIMATED DURATION</span>
-                                <p className="text-slate-300 font-mono text-xs">
-                                  ⏱️ {task.durationMinutes} minutes
-                                </p>
-                              </div>
-                              <div>
-                                <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider block mb-1">DEPENDENCIES</span>
-                                <p className="text-slate-300 font-sans text-xs">
-                                  {task.dependencies && task.dependencies.length > 0 ? (
-                                    <span className="text-purple-400 font-mono text-[10px]">
-                                      Requires: {task.dependencies.map(depId => {
-                                        const pm = missions.find(m => m.id === targetMissionId) || activeMission;
-                                        const tName = pm?.tasks.find(tk => tk.id === depId)?.name || depId;
-                                        return `"${tName}"`;
-                                      }).join(', ')}
-                                    </span>
-                                  ) : (
-                                    <span className="text-slate-500 italic">None (Ready to execute)</span>
-                                  )}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-
-                          {task.reasoning && (
-                            <div className="bg-[#0E152B]/40 border border-[#1C2C57]/45 p-3 rounded-xl">
-                              <span className="text-[9px] font-mono text-teal-400 uppercase tracking-wider block mb-1">🤖 AI reasoning</span>
-                              <p className="text-slate-400 italic leading-relaxed text-[11px] font-sans">
-                                " {task.reasoning} "
-                              </p>
-                            </div>
-                          )}
-
-                          {onFetchTaskStrategy && (
-                            <div className="flex justify-end pt-1">
-                              <button
-                                onClick={() => {
-                                  onFetchTaskStrategy(task);
-                                }}
-                                className="text-[10px] font-mono font-bold text-teal-400 hover:text-teal-300 transition flex items-center gap-1 bg-teal-500/5 hover:bg-teal-500/10 px-3 py-1.5 rounded-lg border border-teal-500/15"
-                              >
-                                Open Full AI Strategy <ChevronRight className="w-3 h-3" />
-                              </button>
-                            </div>
-                          )}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                    <div className="space-y-2.5">
+                      {tasksInGroup.map((task) => renderTaskCard(task, false))}
+                    </div>
                   </div>
                 );
               })}
+
             </div>
           )
         ) : (

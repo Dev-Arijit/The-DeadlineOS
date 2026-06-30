@@ -71,6 +71,7 @@ const formatSafeDate = (isoString: string, options?: Intl.DateTimeFormatOptions)
 
 export function Dashboard({ user, onSignOut }: { user: any; onSignOut: () => void }) {
   const missions = useMissionStore((state) => state.missions);
+  const sortedUpcomingTasks = useMissionStore((state) => state.sortedUpcomingTasks);
   const activeMissionId = useMissionStore((state) => state.activeMissionId);
   const isCreatingNewMission = useMissionStore((state) => state.isCreatingNewMission);
   const conflictWarning = useMissionStore((state) => state.conflictWarning);
@@ -167,21 +168,16 @@ export function Dashboard({ user, onSignOut }: { user: any; onSignOut: () => voi
     }
   }, [missions]);
 
-  // Find active mission (using same closest-deadline-first sort order)
-  const activeMission = missions.find(m => m.id === activeMissionId && m.status === 'active') || 
-                  [...missions]
-                    .filter(m => m.status === 'active')
-                    .sort((a, b) => {
-                      const timeA = new Date(a.deadline).getTime();
-                      const timeB = new Date(b.deadline).getTime();
-                      if (timeA !== timeB) return timeA - timeB;
+  // Find active missions sorted by priorityScore
+  const activeMissionsSorted = [...missions]
+    .filter(m => m.status === 'active')
+    .sort((a, b) => {
+      const scoreA = (a as any).priorityScore || 0;
+      const scoreB = (b as any).priorityScore || 0;
+      return scoreB - scoreA;
+    });
 
-                      const pWeights = { high: 3, medium: 2, low: 1 };
-                      const pA = pWeights[a.priority || 'medium'] || 2;
-                      const pB = pWeights[b.priority || 'medium'] || 2;
-                      return pB - pA;
-                    })[0] || 
-                  null;
+  const activeMission = activeMissionsSorted[0] || null;
 
   // Keep store's activeMissionId in sync with derived activeMission
   useEffect(() => {
@@ -225,8 +221,9 @@ export function Dashboard({ user, onSignOut }: { user: any; onSignOut: () => voi
     if (!activeMission || !activeFocusTask) return;
     setFocusRunning(false);
     const taskId = activeFocusTask.id;
+    const parentMId = (activeFocusTask as any).parentMissionId || activeMission.id;
     setActiveFocusTask(null);
-    await updateTaskStatus(activeMission.id, taskId, 'completed', true);
+    await updateTaskStatus(parentMId, taskId, 'completed', true);
   };
 
   // Submit Chat Message
@@ -341,26 +338,14 @@ export function Dashboard({ user, onSignOut }: { user: any; onSignOut: () => voi
     }
   };
 
-  // Active / Next Tasks filters sorted by highest priority first
   const priorityWeights = { high: 3, medium: 2, low: 1 };
-  const incompleteTasks = activeMission 
-    ? [...activeMission.tasks]
-      .filter(t => t.status === 'todo')
-      .sort((a, b) => {
-        const pA = priorityWeights[a.priority] || 2;
-        const pB = priorityWeights[b.priority] || 2;
-        if (pA !== pB) return pB - pA; // High priority first
-        return a.order - b.order;      // Then original order
-      })
-    : [];
+  // Centralized Global Task Priority Engine: consume the pre-computed and pre-sorted upcoming tasks list from store
+  const incompleteTasks = sortedUpcomingTasks || [];
 
   const doNowTask = incompleteTasks[0] || null;
   const nextTasksList = incompleteTasks.slice(1);
 
   // Parallel stream detection
-  const activeIncompleteMissions = missions.filter(m => m.status === 'active' && m.tasks.some(t => t.status === 'todo'));
-  const sortedCloseMissions = [...activeIncompleteMissions].sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
-
   let isParallelMode = false;
   let parallelMissionA: Mission | null = null;
   let parallelMissionB: Mission | null = null;
@@ -368,12 +353,18 @@ export function Dashboard({ user, onSignOut }: { user: any; onSignOut: () => voi
   let parallelTaskB: Task | null = null;
   let closeDeadlineDiffHours = 0;
 
-  if (sortedCloseMissions.length >= 2) {
-    const m1 = sortedCloseMissions[0];
-    const m2 = sortedCloseMissions[1];
-    const diffMs = Math.abs(new Date(m1.deadline).getTime() - new Date(m2.deadline).getTime());
-    const diffHours = diffMs / (1000 * 60 * 60);
-    if (diffHours <= 24) {
+  if (activeMissionsSorted.length >= 2) {
+    const m1 = activeMissionsSorted[0];
+    const m2 = activeMissionsSorted.find((m, idx) => {
+      if (idx === 0) return false;
+      const diffMs = Math.abs(new Date(m1.deadline).getTime() - new Date(m.deadline).getTime());
+      const diffHours = diffMs / (1000 * 60 * 60);
+      return diffHours <= 24;
+    });
+
+    if (m2) {
+      const diffMs = Math.abs(new Date(m1.deadline).getTime() - new Date(m2.deadline).getTime());
+      const diffHours = diffMs / (1000 * 60 * 60);
       isParallelMode = true;
       parallelMissionA = m1;
       parallelMissionB = m2;
@@ -1207,7 +1198,7 @@ export function Dashboard({ user, onSignOut }: { user: any; onSignOut: () => voi
                                     LAUNCH ZEN FOCUS
                                   </button>
                                   <button
-                                    onClick={() => updateTaskStatus(activeMission.id, doNowTask.id, 'completed')}
+                                    onClick={() => updateTaskStatus((doNowTask as any).parentMissionId || activeMission.id, doNowTask.id, 'completed')}
                                     className="px-5 py-3 bg-slate-900 hover:bg-slate-800 text-teal-400 border border-slate-850 rounded-xl font-bold text-xs transition cursor-pointer flex items-center justify-center gap-1.5 select-none"
                                   >
                                     <Check className="w-4 h-4" />
@@ -1217,7 +1208,7 @@ export function Dashboard({ user, onSignOut }: { user: any; onSignOut: () => voi
 
                                 <div className="grid grid-cols-1 gap-2">
                                   <button
-                                    onClick={() => updateTaskStatus(activeMission.id, doNowTask.id, 'skipped')}
+                                    onClick={() => updateTaskStatus((doNowTask as any).parentMissionId || activeMission.id, doNowTask.id, 'skipped')}
                                     className="w-full py-2.5 bg-slate-900/60 hover:bg-slate-800/80 text-slate-400 border border-slate-850 hover:border-slate-700 rounded-xl font-mono text-[10px] font-bold transition cursor-pointer flex items-center justify-center gap-1 select-none"
                                   >
                                     <RotateCcw className="w-3.5 h-3.5" />
@@ -1599,11 +1590,9 @@ export function Dashboard({ user, onSignOut }: { user: any; onSignOut: () => voi
                         {missions
                           .filter((mission) => mission.status === 'active') // automatically delete/hide completed or expired missions from priority list
                           .sort((a, b) => {
-                            const pWeights = { high: 3, medium: 2, low: 1 };
-                            const pA = pWeights[a.priority || 'medium'] || 2;
-                            const pB = pWeights[b.priority || 'medium'] || 2;
-                            if (pA !== pB) return pB - pA; // High priority first
-                            return new Date(a.deadline).getTime() - new Date(b.deadline).getTime(); // Then earliest deadline first
+                            const scoreA = (a as any).priorityScore || 0;
+                            const scoreB = (b as any).priorityScore || 0;
+                            return scoreB - scoreA;
                           })
                           .map((mission) => {
                             const isExpanded = expandedMissions[mission.id] ?? true;

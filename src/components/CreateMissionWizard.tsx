@@ -10,6 +10,7 @@ import {
   Zap,
   Clock
 } from 'lucide-react';
+import { useMissionStore } from '../store/useMissionStore';
 
 interface CreateMissionWizardProps {
   onPlanNewMission: (
@@ -31,19 +32,24 @@ const MONTH_NAMES = [
   "July", "August", "September", "October", "November", "December"
 ];
 
-function getDeadlineError(year: number, month: number, day: number, timeStr?: string): string | null {
+const tzOffsetMap: Record<string, string> = {
+  'UTC-8': '-08:00',
+  'UTC-7': '-07:00',
+  'UTC-6': '-06:00',
+  'UTC-5': '-05:00',
+  'UTC-0': '+00:00',
+  'UTC+5.5': '+05:30',
+};
+
+function getDeadlineError(year: number, month: number, day: number, timeStr?: string, timezone?: string): string | null {
   if (isNaN(year) || isNaN(month) || isNaN(day)) {
     return "Selected date is invalid.";
   }
   if (month < 1 || month > 12) {
     return "Month must be between 1 and 12.";
   }
-  const monthsWith31 = [1, 3, 5, 7, 8, 10, 12];
   const maxDays = new Date(year, month, 0).getDate();
   const currentMonthName = MONTH_NAMES[month] || "Selected month";
-  if (day === 31 && !monthsWith31.includes(month)) {
-    return `${currentMonthName} does not have 31 days! Selected: ${currentMonthName} ${day}.`;
-  }
   if (day < 1 || day > maxDays) {
     return `Invalid date combination: ${currentMonthName} only has ${maxDays} days, so day ${day} does not exist.`;
   }
@@ -51,11 +57,16 @@ function getDeadlineError(year: number, month: number, day: number, timeStr?: st
   // Cannot select a passed date as deadline
   const now = new Date();
   let chosenDate: Date;
-  if (timeStr) {
-    const [hours, minutes] = timeStr.split(':').map(Number);
-    chosenDate = new Date(year, month - 1, day, isNaN(hours) ? 0 : hours, isNaN(minutes) ? 0 : minutes);
-  } else {
-    chosenDate = new Date(year, month - 1, day, 23, 59, 59, 999);
+  
+  const offset = timezone ? (tzOffsetMap[timezone] || '+00:00') : '+00:00';
+  const hoursAndMins = timeStr || '23:59';
+  
+  // Construct fully timezone-qualified ISO string to represent selected time in user's timezone
+  const isoStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T${hoursAndMins}:00${offset}`;
+  chosenDate = new Date(isoStr);
+
+  if (isNaN(chosenDate.getTime())) {
+    return "Selected date and time combination is invalid.";
   }
 
   if (chosenDate < now) {
@@ -66,6 +77,7 @@ function getDeadlineError(year: number, month: number, day: number, timeStr?: st
 }
 
 export function CreateMissionWizard({ onPlanNewMission, onCancel, loading }: CreateMissionWizardProps) {
+  const userSettings = useMissionStore((state) => state.userSettings);
   const [step, setStep] = useState(1);
   const [title, setTitle] = useState('');
   const [goal, setGoal] = useState(''); // description (optional)
@@ -87,8 +99,15 @@ export function CreateMissionWizard({ onPlanNewMission, onCancel, loading }: Cre
   });
   const [deadlineTime, setDeadlineTime] = useState('18:00');
 
+  useEffect(() => {
+    const maxDays = new Date(selectedYear, selectedMonth, 0).getDate();
+    if (selectedDay > maxDays) {
+      setSelectedDay(maxDays);
+    }
+  }, [selectedYear, selectedMonth, selectedDay]);
+
   const deadlineDate = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`;
-  const dateError = getDeadlineError(selectedYear, selectedMonth, selectedDay, deadlineTime);
+  const dateError = getDeadlineError(selectedYear, selectedMonth, selectedDay, deadlineTime, userSettings.timezone);
 
   // Simple goal presets
   const presets = [
@@ -124,7 +143,8 @@ export function CreateMissionWizard({ onPlanNewMission, onCancel, loading }: Cre
     const safeDay = Math.min(selectedDay, Math.max(1, maxDays));
     sanitizedDate = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-${String(safeDay).padStart(2, '0')}`;
 
-    const fullDeadline = `${sanitizedDate}T${deadlineTime}:00Z`;
+    const offset = userSettings.timezone ? (tzOffsetMap[userSettings.timezone] || '+00:00') : '+00:00';
+    const fullDeadline = `${sanitizedDate}T${deadlineTime}:00${offset}`;
     // Pass default/falsy values for hours, slots, priority, and tags.
     // The backend will dynamically calculate and generate the ideal hours, priority, tasks and milestones!
     await onPlanNewMission(
@@ -292,7 +312,7 @@ export function CreateMissionWizard({ onPlanNewMission, onCancel, loading }: Cre
                           dateError ? 'border-rose-500 focus:border-rose-500' : 'border-slate-850 focus:border-teal-500'
                         }`}
                       >
-                        {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => (
+                        {Array.from({ length: new Date(selectedYear, selectedMonth, 0).getDate() }, (_, i) => i + 1).map((d) => (
                           <option key={d} value={d} className="bg-slate-950 text-white">
                             {String(d).padStart(2, '0')}
                           </option>
@@ -323,7 +343,7 @@ export function CreateMissionWizard({ onPlanNewMission, onCancel, loading }: Cre
                   )}
                 </div>
                 <div>
-                  <label className="block text-[10px] font-mono text-slate-400 uppercase tracking-wider mb-1.5 font-bold">CRITICAL CUTOFF TIME (UTC)</label>
+                  <label className="block text-[10px] font-mono text-slate-400 uppercase tracking-wider mb-1.5 font-bold">CRITICAL CUTOFF TIME ({userSettings.timezone})</label>
                   <input
                     id="wizard-deadline-time"
                     type="time"
@@ -372,7 +392,7 @@ export function CreateMissionWizard({ onPlanNewMission, onCancel, loading }: Cre
                 </div>
                 <div className="flex justify-between border-b border-slate-900 pb-1">
                   <span>TARGET DEADLINE:</span>
-                  <span className="text-teal-400 font-bold">{deadlineDate} at {deadlineTime} UTC</span>
+                  <span className="text-teal-400 font-bold">{deadlineDate} at {deadlineTime} ({userSettings.timezone})</span>
                 </div>
                 <div className="flex justify-between">
                   <span>ESTIMATED HOURS:</span>

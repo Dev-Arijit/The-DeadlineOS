@@ -72,6 +72,14 @@ export interface Mission {
   failurePrediction: FailurePrediction;
   decisionLog: Decision[];
   notifications: SmartNotification[];
+  riskLevel?: 'Critical' | 'Very High' | 'High' | 'Medium' | 'Low';
+  completionChance?: number; // 0 to 100
+  urgencyScore?: number; // 0 to 100
+  priorityScore?: number; // 0 to 100
+  date?: string; // e.g. "2026-07-15"
+  time?: string; // e.g. "18:30"
+  timezone?: string; // e.g. "UTC-7"
+  deadlineISO?: string; // e.g. "2026-07-15T18:30:00.000Z"
 }
 
 export interface UserProfile {
@@ -103,3 +111,15 @@ export function calculateMissionProgress(mission: Mission | null): number {
     .reduce((sum, t) => sum + (t.durationMinutes || 0), 0);
   return Math.round((completedDuration / totalDuration) * 100);
 }
+
+export interface PrioritizedTask extends Task {
+  parentMissionId: string;
+  parentMissionTitle: string;
+  parentMissionDeadline: string;
+  parentMissionPriorityScore: number;
+  parentMissionRiskLevel: string;
+  taskGlobalPriorityScore: number;
+  importanceScore: number;
+  timeRemainingStr: string;
+}
+

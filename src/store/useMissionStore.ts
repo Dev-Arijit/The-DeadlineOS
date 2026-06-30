@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import { Mission, Task, SmartNotification, Decision, Milestone, UserSettings } from '../types';
+import { Mission, Task, SmartNotification, Decision, Milestone, UserSettings, PrioritizedTask } from '../types';
 import { db, auth } from '../lib/firebase';
-import { doc, setDoc, collection, getDocs, query, where, deleteDoc } from 'firebase/firestore';
+import { doc, setDoc, collection, getDocs, query, where, deleteDoc, serverTimestamp } from 'firebase/firestore';
 
 function parseAndSanitizeDeadline(deadlineStr: string): Date {
   if (!deadlineStr) return new Date(Date.now() + 7 * 24 * 3600 * 1000);
@@ -46,6 +46,11 @@ interface StoreAnalytics {
 
 interface MissionState {
   missions: Mission[];
+  sortedMissions: Mission[];
+  sortedUpcomingTasks: PrioritizedTask[];
+  activeMission: Mission | null;
+  concurrentMissions: Mission[];
+  riskScores: Record<string, number>;
   activeMissionId: string | null;
   rankedMissionIds: string[];
   prioritizationReasoning: string;
@@ -147,7 +152,14 @@ export const useMissionStore = create<MissionState>((set, get) => {
     // 3. Firestore
     try {
       const missionRef = doc(db, 'missions', mission.id);
-      await setDoc(missionRef, mission, { merge: true });
+      const dataToSave = {
+        ...mission,
+        updatedAt: serverTimestamp(),
+      };
+      if (!mission.createdAt) {
+        (dataToSave as any).createdAt = serverTimestamp();
+      }
+      await setDoc(missionRef, dataToSave, { merge: true });
     } catch (e) {
       console.warn('Firestore sync failed, fallback active:', e);
     }
@@ -155,6 +167,11 @@ export const useMissionStore = create<MissionState>((set, get) => {
 
   return {
     missions: [],
+    sortedMissions: [],
+    sortedUpcomingTasks: [],
+    activeMission: null,
+    concurrentMissions: [],
+    riskScores: {},
     activeMissionId: null,
     rankedMissionIds: [],
     prioritizationReasoning: '',
@@ -320,6 +337,11 @@ Try asking:
       const { missions, activeMissionId } = get();
       if (missions.length === 0) {
         set({
+          sortedMissions: [],
+          sortedUpcomingTasks: [],
+          activeMission: null,
+          concurrentMissions: [],
+          riskScores: {},
           rankedMissionIds: [],
           conflictWarning: null,
           conflictRecommendation: null,
@@ -372,58 +394,133 @@ Try asking:
       // 1. Calculate Holistic Risk and Priority Score for each mission
       const updatedMissions = checkedMissions.map((mission) => {
         if (mission.status === 'archived' || mission.status === 'completed' || mission.status === 'expired') {
-          return { ...mission, priorityScore: 0 };
+          return {
+            ...mission,
+            riskLevel: 'Low' as const,
+            completionChance: 100,
+            urgencyScore: 0,
+            priorityScore: 0,
+            confidenceScore: 100,
+            failurePrediction: {
+              probability: 0,
+              successProbability: 100,
+              bottleneck: 'None',
+              reason: 'Completed or archived.',
+              suggestedFix: 'None'
+            }
+          };
         }
 
-        // --- HOLISTIC RISK & FAILURE PREDICTION RE-CALCULATION ---
-        const totalTasksOfThis = (mission.tasks || []).length;
-        const completedTasksOfThis = (mission.tasks || []).filter((t) => t.status === 'completed').length;
-        const completionPctOfThis = totalTasksOfThis > 0 ? (completedTasksOfThis / totalTasksOfThis) : 0;
+        // --- REAL RISK ANALYSIS & PRIORITIZATION ENGINE ---
+        const totalTasks = (mission.tasks || []).length;
+        const completedTasks = (mission.tasks || []).filter((t) => t.status === 'completed').length;
+        const remainingTasksCount = (mission.tasks || []).filter((t) => t.status === 'todo').length;
+        const completionPct = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
         
         const missionRemainingMinutes = (mission.tasks || [])
           .filter((t) => t.status === 'todo')
-          .reduce((sum, t) => sum + t.durationMinutes, 0);
+          .reduce((sum, t) => sum + (t.durationMinutes || 0), 0);
         const missionRemainingHours = missionRemainingMinutes / 60;
         
-        const missionDaysLeft = Math.max(0.1, (new Date(mission.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
-        const missionAvailableHours = missionDaysLeft * (mission.dailyCapacity || get().userSettings.capacity);
+        const deadlineTime = new Date(mission.deadline).getTime();
+        const nowTime = Date.now();
+        const hoursRemaining = (deadlineTime - nowTime) / (1000 * 60 * 60);
+        const daysRemaining = Math.max(0.1, hoursRemaining / 24);
         
-        const individualRatio = missionRemainingHours / (missionAvailableHours || 1);
+        const dailyCapacity = mission.dailyCapacity || get().userSettings.capacity;
+        const remainingAvailableHours = daysRemaining * dailyCapacity;
+
+        // Base risk and urgency from Deadline Remaining:
+        let baseRisk = 15;
+        let urgencyScore = 15;
+        let riskLevel: 'Critical' | 'Very High' | 'High' | 'Medium' | 'Low' = 'Low';
+
+        if (hoursRemaining < 6) {
+          riskLevel = 'Critical';
+          baseRisk = 85;
+          urgencyScore = 95;
+        } else if (hoursRemaining < 12) {
+          riskLevel = 'Very High';
+          baseRisk = 75;
+          urgencyScore = 85;
+        } else if (hoursRemaining < 24) {
+          riskLevel = 'High';
+          baseRisk = 60;
+          urgencyScore = 70;
+        } else if (hoursRemaining < 72) { // 1-3 days
+          riskLevel = 'Medium';
+          baseRisk = 40;
+          urgencyScore = 50;
+        } else { // > 3 days
+          riskLevel = 'Low';
+          baseRisk = 15;
+          urgencyScore = 20;
+        }
+
+        // Adjust risk based on remaining tasks, available hours, and capacity:
+        let adjustedRisk = baseRisk;
+
+        // If estimated work > available hours, Increase risk
+        if (missionRemainingHours > remainingAvailableHours) {
+          adjustedRisk += 25;
+        }
+        // If deadline is tomorrow, Increase risk
+        if (hoursRemaining <= 36) {
+          adjustedRisk += 15;
+        }
+        // If completion is under 20%, Increase risk
+        if (completionPct < 20) {
+          adjustedRisk += 15;
+        }
+        // If mission is almost complete, Decrease risk
+        if (completionPct > 80) {
+          adjustedRisk -= 20;
+        }
+
+        const finalProb = Math.max(5, Math.min(99, Math.round(adjustedRisk)));
         
-        // Calculate competing workload from other missions (all tasks from other missions)
-        const otherMissionsRemainingMinutes = checkedMissions
-          .filter((m) => m.id !== mission.id && m.status !== 'archived' && m.status !== 'completed' && m.status !== 'expired')
-          .reduce((acc, m) => {
-            return acc + m.tasks.filter((t) => t.status === 'todo').reduce((sum, t) => sum + t.durationMinutes, 0);
-          }, 0);
-        const otherMissionsRemainingHours = otherMissionsRemainingMinutes / 60;
-        
-        // Compute dynamic failure probability taking all other tasks/missions in account
-        const baseProb = 20; // baseline probability of failure/delay
-        const ownCompletionReduction = completionPctOfThis * 25; // Completing own tasks reduces risk by up to 25%
-        const individualRatioIncrease = Math.min(40, individualRatio * 20); // If this mission's workload is dense, risk goes up
-        const globalOverloadIncrease = Math.min(25, (globalOverloadRatio > 1 ? (globalOverloadRatio - 1) * 15 : 0)); // If globally overloaded, risk goes up
-        
-        // Lower priority missions get penalized if there is a lot of workload in other missions
-        const otherWorkloadPenalty = mission.priority !== 'high' ? Math.min(15, otherMissionsRemainingHours * 1.0) : 0;
-        
-        const rawProb = baseProb - ownCompletionReduction + individualRatioIncrease + globalOverloadIncrease + otherWorkloadPenalty;
-        const finalProb = Math.max(5, Math.min(95, Math.round(rawProb)));
+        // Map back to final riskLevel
+        if (finalProb >= 85) {
+          riskLevel = 'Critical';
+        } else if (finalProb >= 70) {
+          riskLevel = 'Very High';
+        } else if (finalProb >= 50) {
+          riskLevel = 'High';
+        } else if (finalProb >= 25) {
+          riskLevel = 'Medium';
+        } else {
+          riskLevel = 'Low';
+        }
+
         const successProbability = 100 - finalProb;
-        const confidenceScore = Math.min(98, Math.max(5, Math.round(75 + ownCompletionReduction - individualRatioIncrease - otherWorkloadPenalty * 0.5)));
+        const completionChance = Math.max(0, Math.min(100, Math.round(successProbability)));
+        const aiFeasibilityScore = Math.max(5, Math.min(98, 100 - finalProb));
+
+        // Calculate dynamic priority score using the requested factors
+        const factor1 = urgencyScore * 0.35;
+        const factor2 = Math.min(20, missionRemainingHours * 1.5);
+        const factor3 = Math.min(10, (mission.estimatedHours || 20) * 0.2);
+        const factor4 = (1 - (completionPct / 100)) * 15;
+        const factor5 = Math.min(10, remainingTasksCount * 1.0);
+        const factor6 = finalProb * 0.15;
+        const factor7 = (1 - (aiFeasibilityScore / 100)) * 5;
+        const priorityBaseMod = mission.priority === 'high' ? 15 : mission.priority === 'medium' ? 8 : 0;
+
+        const priorityScoreRaw = factor1 + factor2 + factor3 + factor4 + factor5 + factor6 + factor7 + priorityBaseMod;
+        const priorityScore = Math.min(100, Math.max(1, Math.round(priorityScoreRaw)));
 
         const bottleneck = missionRemainingHours > 0 
           ? ((mission.tasks || []).find((t) => t.status === 'todo')?.name || 'Sequential tasks execution.')
           : 'None';
           
         const reason = missionRemainingHours > 0
-          ? `Urgency strain is ${(individualRatio * 100).toFixed(0)}% against available capacity. Other active sibling backlog requires ${otherMissionsRemainingHours.toFixed(1)} hours.`
+          ? `Workload requires ${missionRemainingHours.toFixed(1)} hours against ${remainingAvailableHours.toFixed(1)} available hours. Risk is assessed at ${finalProb}%.`
           : 'All planned deliverables for this focus stream have been fully checked off.';
           
         const suggestedFix = missionRemainingHours > 0
           ? (mission.priority === 'high' 
               ? `Commit completely to: "${bottleneck}" to prevent deadline cascade.` 
-              : `Workload is dense. Restructure "${mission.title || 'this mission'}" until high priority sibling backlog of ${otherMissionsRemainingHours.toFixed(1)} hours is cleared.`)
+              : `Workload is dense. Restructure "${mission.title || 'this mission'}" or adjust deadlines.`)
           : 'Maintain nominal momentum and celebrate!';
 
         const updatedFailurePrediction = {
@@ -434,44 +531,13 @@ Try asking:
           suggestedFix
         };
 
-        // --- NOW CALCULATE PRIORITY SCORE ---
-        // Factor A: Deadline Proximity (Up to 30 points)
-        const daysLeft = (new Date(mission.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24);
-        let deadlineProximityScore = 0;
-        if (daysLeft <= 0) {
-          deadlineProximityScore = 30;
-        } else if (daysLeft < 14) {
-          deadlineProximityScore = Math.max(0, 30 * (1 - daysLeft / 14));
-        }
-
-        // Factor B: Remaining Effort (Up to 25 points)
-        const effortScore = Math.min(25, missionRemainingHours * 1.5);
-
-        // Factor C: Risk Level (Up to 20 points)
-        // Use the newly calculated holistic failure probability!
-        const riskScore = Math.min(20, finalProb * 0.2);
-
-        // Factor D: Dependency Count (Up to 10 points)
-        const depCount = (mission.tasks || [])
-          .filter((t) => t.status === 'todo')
-          .reduce((sum, t) => sum + (t.dependencies?.length || 0), 0);
-        const dependencyScore = Math.min(10, depCount * 1.5);
-
-        // Factor E: Completion Percentage (Up to 15 points)
-        const completionScore = Math.min(15, (1 - completedTasksOfThis / (totalTasksOfThis || 1)) * 15);
-
-        // Priority Base Modifier
-        let baseMod = 5;
-        if (mission.priority === 'high') baseMod = 15;
-        if (mission.priority === 'medium') baseMod = 10;
-
-        const totalScoreRaw = deadlineProximityScore + effortScore + riskScore + dependencyScore + completionScore + baseMod;
-        const priorityScore = Math.min(100, Math.max(1, Math.round(totalScoreRaw)));
-
         return {
           ...mission,
-          confidenceScore,
+          confidenceScore: successProbability,
           failurePrediction: updatedFailurePrediction,
+          riskLevel,
+          completionChance,
+          urgencyScore,
           priorityScore,
         };
       });
@@ -482,12 +548,35 @@ Try asking:
       );
       
       const sortedMissions = [...activeUncompleted].sort((a, b) => {
-        const scoreA = (a as any).priorityScore || 0;
-        const scoreB = (b as any).priorityScore || 0;
+        const scoreA = a.priorityScore || 0;
+        const scoreB = b.priorityScore || 0;
         return scoreB - scoreA;
       });
 
       const rankedIds = sortedMissions.map((m) => m.id);
+
+      // --- CONCURRENT MISSION LOGIC ---
+      // A second mission should only appear concurrently if: deadline difference is <= 24 hours.
+      const concurrentMissions: Mission[] = [];
+      const activeMission = sortedMissions[0] || null;
+      
+      if (activeMission) {
+        concurrentMissions.push(activeMission);
+        const secondMission = sortedMissions.find(m => m.id !== activeMission.id);
+        if (secondMission) {
+          const diffMs = Math.abs(new Date(activeMission.deadline).getTime() - new Date(secondMission.deadline).getTime());
+          const diffHours = diffMs / (1000 * 60 * 60);
+          if (diffHours <= 24) {
+            concurrentMissions.push(secondMission);
+          }
+        }
+      }
+
+      // Generate a map of riskScores for each mission by ID
+      const riskScores: Record<string, number> = {};
+      updatedMissions.forEach((m) => {
+        riskScores[m.id] = m.failurePrediction?.probability ?? 20;
+      });
 
       // Generate text-based prioritize reasoning and impact dynamically
       let reasonText = 'No active threats detected. Allocate balanced energy reserves.';
@@ -496,8 +585,7 @@ Try asking:
       if (sortedMissions.length > 0) {
         const top = sortedMissions[0];
         const topDeadlineTime = new Date(top.deadline).getTime();
-        const topDeadlineStr = isNaN(topDeadlineTime) ? top.deadline : new Date(top.deadline).toLocaleDateString();
-        reasonText = `"${top.title || top.goal}" prioritized as top focus (Score: ${(top as any).priorityScore}) due to high dependency density and deadline proximity of ${topDeadlineStr}.`;
+        reasonText = `"${top.title || top.goal}" prioritized as top focus (Priority Score: ${top.priorityScore}) due to critical deadline remaining (${Math.round(Math.max(0, (topDeadlineTime - Date.now()) / (1000 * 60 * 60)))} hours).`;
         impactText = `Any direct delay in "${top.title || 'Untitled'}" cascades onto subsequent milestone gates, increasing failure potential.`;
       }
 
@@ -560,30 +648,115 @@ Try asking:
         };
       });
 
-      // Context switching: switch activeMissionId to next available stream if current expired or completed
-      let nextActiveId = activeMissionId;
-      if (activeMissionId) {
-        const currentActiveMission = updatedMissions.find(m => m.id === activeMissionId);
-        if (!currentActiveMission || currentActiveMission.status === 'completed' || currentActiveMission.status === 'expired' || currentActiveMission.status === 'archived') {
-          const sortedActive = [...updatedMissions]
-            .filter(m => m.status === 'active')
-            .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
-          const fallbackMission = sortedActive.find(m => m.tasks.some(t => t.status === 'todo')) 
-            || sortedActive[0];
-          nextActiveId = fallbackMission ? fallbackMission.id : null;
+      // --- GLOBAL TASK PRIORITY ENGINE ---
+      const activeMissions = updatedMissions.filter(m => m.status === 'active');
+      const upcomingTasksList: PrioritizedTask[] = [];
+
+      activeMissions.forEach((m) => {
+        const incompleteTasks = (m.tasks || []).filter(
+          (t) => t.status === 'todo' || t.status === 'delayed'
+        );
+
+        incompleteTasks.forEach((t) => {
+          let importanceScore = 50; // base score
+
+          // 1. Task priority weight
+          if (t.priority === 'high') importanceScore += 25;
+          else if (t.priority === 'medium') importanceScore += 10;
+          else if (t.priority === 'low') importanceScore -= 15;
+
+          // 2. Dependencies impact
+          const dependentCount = (m.tasks || []).filter((otherTask) => 
+            otherTask.dependencies?.includes(t.id)
+          ).length;
+          importanceScore += dependentCount * 10;
+
+          // 3. Duration impact (shorter tasks first for momentum)
+          if (t.durationMinutes <= 30) importanceScore += 5;
+          else if (t.durationMinutes > 90) importanceScore -= 10;
+
+          // 4. Time position impact
+          if (t.scheduledTime) {
+            const isMorning = t.scheduledTime.includes('AM') || 
+                              t.scheduledTime.startsWith('08:') || 
+                              t.scheduledTime.startsWith('09:') || 
+                              t.scheduledTime.startsWith('10:') || 
+                              t.scheduledTime.startsWith('11:');
+            if (isMorning) importanceScore += 10;
+          }
+
+          importanceScore = Math.min(100, Math.max(5, importanceScore));
+
+          // Combine task base importance score with parent mission's priority score
+          const parentPriorityScore = m.priorityScore || 0;
+          
+          let urgencyBoost = 0;
+          const deadlineTime = new Date(m.deadline).getTime();
+          const msRemaining = deadlineTime - Date.now();
+          const hoursRemaining = msRemaining / (1000 * 60 * 60);
+
+          if (hoursRemaining > 0) {
+            if (hoursRemaining < 24) {
+              urgencyBoost = 30; // critical
+            } else if (hoursRemaining < 72) {
+              urgencyBoost = 15; // high
+            } else {
+              urgencyBoost = 5;
+            }
+          } else {
+            urgencyBoost = 40; // overdue gets highest boost
+          }
+
+          const taskGlobalPriorityScore = Math.round(
+            (importanceScore * 0.4) + (parentPriorityScore * 0.4) + urgencyBoost
+          );
+
+          let timeRemainingStr = '';
+          if (hoursRemaining > 0) {
+            if (hoursRemaining >= 24) {
+              const days = Math.floor(hoursRemaining / 24);
+              const remainingHours = Math.round(hoursRemaining % 24);
+              timeRemainingStr = `${days}d ${remainingHours}h left`;
+            } else {
+              timeRemainingStr = `${Math.round(hoursRemaining)}h left`;
+            }
+          } else {
+            timeRemainingStr = 'Overdue';
+          }
+
+          upcomingTasksList.push({
+            ...t,
+            parentMissionId: m.id,
+            parentMissionTitle: m.title || m.goal,
+            parentMissionDeadline: m.deadline,
+            parentMissionPriorityScore: parentPriorityScore,
+            parentMissionRiskLevel: m.riskLevel || 'Low',
+            taskGlobalPriorityScore,
+            importanceScore,
+            timeRemainingStr,
+          });
+        });
+      });
+
+      upcomingTasksList.sort((a, b) => {
+        if (b.taskGlobalPriorityScore !== a.taskGlobalPriorityScore) {
+          return b.taskGlobalPriorityScore - a.taskGlobalPriorityScore;
         }
-      } else if (updatedMissions.length > 0) {
-        const sortedActive = [...updatedMissions]
-          .filter(m => m.status === 'active')
-          .sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
-        const fallbackMission = sortedActive.find(m => m.tasks.some(t => t.status === 'todo')) 
-          || sortedActive[0];
-        nextActiveId = fallbackMission ? fallbackMission.id : null;
-      }
+        const pWeights = { high: 3, medium: 2, low: 1 };
+        const pA = pWeights[a.priority] || 2;
+        const pB = pWeights[b.priority] || 2;
+        if (pA !== pB) return pB - pA;
+        return a.durationMinutes - b.durationMinutes;
+      });
 
       set({
         missions: updatedMissions,
-        activeMissionId: nextActiveId,
+        sortedMissions,
+        sortedUpcomingTasks: upcomingTasksList,
+        activeMission,
+        concurrentMissions,
+        riskScores,
+        activeMissionId: activeMission?.id || null,
         rankedMissionIds: rankedIds,
         prioritizationReasoning: reasonText,
         prioritizationImpact: impactText,
@@ -847,13 +1020,50 @@ Try asking:
         };
       }
 
+      let combinedDate = '';
+      let combinedTime = '';
+      const combinedTz = get().userSettings.timezone || 'UTC';
+      let deadlineISO = '';
+
+      if (deadline) {
+        try {
+          const parsedDate = new Date(deadline);
+          if (!isNaN(parsedDate.getTime())) {
+            deadlineISO = parsedDate.toISOString();
+          }
+        } catch (e) {
+          console.error("Failed to parse deadline into ISO", e);
+        }
+
+        const tIndex = deadline.indexOf('T');
+        if (tIndex !== -1) {
+          combinedDate = deadline.substring(0, tIndex);
+          const afterT = deadline.substring(tIndex + 1);
+          const colIndex = afterT.indexOf(':');
+          if (colIndex !== -1) {
+            combinedTime = afterT.substring(0, colIndex + 3);
+          }
+        }
+      }
+
+      if (!title || !title.trim()) {
+        throw new Error('Mission title is required');
+      }
+      if (!deadline || !deadlineISO) {
+        throw new Error('A valid deadline date and time is required');
+      }
+
       const newMissionId = freshPlan.id || generateId();
       
       const decoratedMission: Mission = {
         id: newMissionId,
         userId: uid,
         goal: goal || title || freshPlan.goal || '',
-        deadline: deadline || freshPlan.deadline || new Date(Date.now() + 7 * 24 * 3600 * 1000).toISOString(),
+        deadline: deadlineISO,
+        date: combinedDate,
+        time: combinedTime,
+        timezone: combinedTz,
+        deadlineISO: deadlineISO,
         title: title || freshPlan.title || 'Mission Focus',
         priority: priority || freshPlan.priority || 'medium',
         estimatedHours: estimatedHours || freshPlan.estimatedHours || 20,
@@ -890,7 +1100,7 @@ Try asking:
 
       set({
         missions: allMissions,
-        activeMissionId: decoratedMission.id,
+        activeMissionId: null,
         loading: false,
         loadingMessage: null,
       });
