@@ -1,0 +1,71 @@
+{
+  "entities": {
+    "Mission": {
+      "title": "Mission",
+      "description": "An execution mission (timeline planner/sprint tracking) created by the user.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the mission"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Identifier of the pilot/user who owns this mission"
+        },
+        "goal": {
+          "type": "string",
+          "description": "The main objective of the mission"
+        },
+        "deadline": {
+          "type": "string",
+          "description": "Deadline for completing the mission"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Date when the mission was created"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "completed", "abandoned"],
+          "description": "Current state of the mission"
+        },
+        "confidenceScore": {
+          "type": "number",
+          "description": "Calculated score indicating prediction success chance"
+        },
+        "shadowTimeline": {
+          "type": "object",
+          "description": "Shadow planning buffer times (best, expected, worst case hours)"
+        },
+        "milestones": {
+          "type": "array",
+          "description": "Milestones for this mission"
+        },
+        "tasks": {
+          "type": "array",
+          "description": "Sprint tasks representing individual items to be resolved"
+        },
+        "failurePrediction": {
+          "type": "object",
+          "description": "Live AI feedback identifying predicted bottlenecks"
+        },
+        "decisionLog": {
+          "type": "array",
+          "description": "Audit trail log of choices and updates"
+        },
+        "notifications": {
+          "type": "array",
+          "description": "Smart notifications related to this mission"
+        }
+      },
+      "required": ["id", "userId", "goal", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/missions/{missionId}": {
+      "schema": "Mission",
+      "description": "Active sprint and task records mapped to distinct mission IDs"
+    }
+  }
+}

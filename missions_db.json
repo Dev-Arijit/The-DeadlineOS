@@ -1,0 +1,2804 @@
+{
+  "missions": [
+    {
+      "id": "d8obd4lv7",
+      "userId": "f6Cg3NkHxJT9WzEBjxDBpahE9ia2",
+      "goal": "Buy a PS5",
+      "deadline": "2026-07-05T14:18:56.291Z",
+      "title": "Buy a PS5",
+      "priority": "medium",
+      "estimatedHours": 2,
+      "dailyCapacity": 4,
+      "tags": [],
+      "createdAt": "2026-06-28T14:18:09.335Z",
+      "status": "completed",
+      "confidenceScore": 95,
+      "shadowTimeline": {
+        "bestCaseHours": 2,
+        "expectedCaseHours": 2,
+        "worstCaseHours": 3
+      },
+      "milestones": [
+        {
+          "id": "M1",
+          "name": "Availability Confirmed",
+          "description": "Successfully identified where and how to purchase a PS5.",
+          "deadline": "By 2026-06-28T15:30:00Z"
+        },
+        {
+          "id": "M2",
+          "name": "Purchase Initiated",
+          "description": "Order has been placed online or plan for in-store visit is finalized.",
+          "deadline": "By 2026-06-28T16:15:00Z"
+        },
+        {
+          "id": "M3",
+          "name": "PS5 Secured",
+          "description": "Order confirmed and delivery/pickup details are clear.",
+          "deadline": "By 2026-06-28T17:00:00Z"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "T1",
+          "name": "Research Availability & Prices",
+          "description": "Check online retailers (Amazon, Best Buy, Walmart, PlayStation Direct) and local stores for PS5 stock and pricing.",
+          "durationMinutes": 45,
+          "priority": "high",
+          "order": 0,
+          "dependencies": [],
+          "reasoning": "This is the foundational step to identify purchase options and must be completed first to inform subsequent decisions.",
+          "scheduledTime": "2026-06-28T14:17:46Z",
+          "milestoneId": "M1",
+          "status": "completed",
+          "completedAt": "2026-06-28T14:36:52.221Z"
+        },
+        {
+          "id": "T2",
+          "name": "Compare Options & Select Best Deal",
+          "description": "Evaluate available PS5 options (console only, bundles), prices, and shipping/pickup times to select the most viable purchase.",
+          "durationMinutes": 30,
+          "priority": "high",
+          "order": 1,
+          "dependencies": [
+            "T1"
+          ],
+          "reasoning": "After researching, comparing options is crucial to make an informed and efficient purchase decision, directly dependent on knowing what's available.",
+          "scheduledTime": "2026-06-28T15:02:46Z",
+          "milestoneId": "M1",
+          "status": "completed",
+          "completedAt": "2026-06-28T14:36:53.813Z"
+        },
+        {
+          "id": "T3",
+          "name": "Secure Payment Method",
+          "description": "Ensure credit card details, PayPal, or other payment information is readily available and valid for a quick checkout.",
+          "durationMinutes": 15,
+          "priority": "high",
+          "order": 2,
+          "dependencies": [],
+          "reasoning": "Having a ready payment method is critical to avoid delays during checkout, especially with last-minute purchases where stock can deplete quickly. This can be prepared concurrently or just before placing the order.",
+          "scheduledTime": "2026-06-28T15:32:46Z",
+          "milestoneId": "M2",
+          "status": "completed",
+          "completedAt": "2026-06-28T15:36:35.251Z"
+        },
+        {
+          "id": "T4",
+          "name": "Place Order Online / Plan In-Store Visit",
+          "description": "Execute the purchase by placing the order online or making concrete plans to visit a physical store for pickup.",
+          "durationMinutes": 30,
+          "priority": "high",
+          "order": 3,
+          "dependencies": [
+            "T2",
+            "T3"
+          ],
+          "reasoning": "This is the core action of buying the PS5, requiring both a chosen option and a ready payment method. It's scheduled immediately after selection and payment preparation.",
+          "scheduledTime": "2026-06-28T15:47:46Z",
+          "milestoneId": "M2",
+          "status": "completed",
+          "completedAt": "2026-06-28T15:36:35.939Z"
+        },
+        {
+          "id": "T5",
+          "name": "Confirm Order & Delivery/Pickup Details",
+          "description": "Verify the purchase confirmation, track delivery status, or confirm in-store pickup time and location.",
+          "durationMinutes": 15,
+          "priority": "high",
+          "order": 4,
+          "dependencies": [
+            "T4"
+          ],
+          "reasoning": "Confirmation is essential to ensure the purchase was successful and to understand the next steps for receiving the PS5. It follows directly after placing the order.",
+          "scheduledTime": "2026-06-28T16:17:46Z",
+          "milestoneId": "M3",
+          "status": "completed",
+          "completedAt": "2026-06-28T15:36:36.277Z"
+        },
+        {
+          "id": "T6",
+          "name": "Arrange for Pickup (if in-store)",
+          "description": "If an in-store pickup was chosen, finalize logistics such as travel time and required identification.",
+          "durationMinutes": 15,
+          "priority": "high",
+          "order": 5,
+          "dependencies": [
+            "T5"
+          ],
+          "reasoning": "This task is conditional on an in-store purchase and ensures smooth collection. It's scheduled after the order is confirmed.",
+          "scheduledTime": "2026-06-28T16:32:46Z",
+          "milestoneId": "M3",
+          "status": "completed",
+          "completedAt": "2026-06-28T15:36:36.779Z"
+        }
+      ],
+      "failurePrediction": {
+        "probability": 5,
+        "successProbability": 95,
+        "bottleneck": "Arrange for Pickup (if in-store)",
+        "reason": "Urgency strain is 1% against available capacity. Other active sibling backlog requires 0.0 hours.",
+        "suggestedFix": "Workload is dense. Restructure \"Buy a PS5\" until high priority sibling backlog of 0.0 hours is cleared."
+      },
+      "decisionLog": [
+        {
+          "id": "DL1",
+          "agent": "Planner",
+          "action": "Decomposed goal into 6 sequential subtasks.",
+          "reasoning": "Breaking down 'Buy a PS5' into manageable steps from research to confirmation ensures a structured approach for a last-minute, high-stakes goal."
+        },
+        {
+          "id": "DL2",
+          "agent": "Planner",
+          "action": "Defined 3 logical milestones.",
+          "reasoning": "Milestones provide clear checkpoints for progress tracking: knowing what to buy, initiating the purchase, and confirming the acquisition."
+        },
+        {
+          "id": "DL3",
+          "agent": "Planner",
+          "action": "Estimated expectedCaseHours at 2 hours.",
+          "reasoning": "Given the last-minute nature and potential for quick online purchases, 2 hours is a realistic active effort estimate. The sum of task durations (150 minutes) aligns with this."
+        },
+        {
+          "id": "DL4",
+          "agent": "Priority",
+          "action": "Assigned 'high' priority to all tasks.",
+          "reasoning": "Due to the absolute deadline of T18:00:00Z, all steps are critical and time-sensitive to achieve the goal within the given timeframe."
+        },
+        {
+          "id": "DL5",
+          "agent": "Priority",
+          "action": "Established task dependencies and sequential order.",
+          "reasoning": "Logical flow dictates that research precedes selection, and selection/payment precedes placing an order, ensuring a coherent and efficient execution path."
+        },
+        {
+          "id": "DL6",
+          "agent": "Risk",
+          "action": "Calculated shadow timeline (Best: 2h, Expected: 2h, Worst: 3h).",
+          "reasoning": "These estimations account for varying levels of difficulty in finding stock and completing the purchase, from a smooth transaction to encountering minor hurdles."
+        },
+        {
+          "id": "DL7",
+          "agent": "Risk",
+          "action": "Assessed failure probability at 30% and success at 70%.",
+          "reasoning": "The tight deadline combined with potential PS5 stock scarcity and online purchasing complexities introduces a significant, but manageable, risk of failure."
+        },
+        {
+          "id": "DL8",
+          "agent": "Risk",
+          "action": "Identified 'stock availability and smooth transaction' as the bottleneck.",
+          "reasoning": "The primary challenge is not the process itself, but the external factor of product availability and the speed/reliability of online systems under pressure."
+        },
+        {
+          "id": "DL9",
+          "agent": "Risk",
+          "action": "Provided actionable fix for the bottleneck.",
+          "reasoning": "Focusing on immediate availability channels and preparing for quick action directly addresses the identified bottleneck of stock and transaction speed."
+        },
+        {
+          "id": "DL10",
+          "agent": "Replanner",
+          "action": "Devised initial recovery triggers and adjustments.",
+          "reasoning": "Anticipating common last-minute purchasing issues (no stock, payment failure, website issues) allows for immediate corrective actions to stay on track."
+        },
+        {
+          "id": "DL11",
+          "agent": "Coach",
+          "action": "Generated 3 hyper-personalized notifications.",
+          "reasoning": "Notifications are designed to provide timely guidance, emphasize critical actions, and highlight their impact on success, motivating the user to act efficiently."
+        }
+      ],
+      "notifications": [
+        {
+          "id": "N1",
+          "title": "Time is Ticking: PS5 Hunt Begins!",
+          "content": "Start 'Research Availability & Prices' NOW. The sooner you find stock, the higher your chance of securing a PS5 by 18:00Z. Delaying this task by even 15 minutes drops your success chance by 10%.",
+          "type": "warning"
+        },
+        {
+          "id": "N2",
+          "title": "Payment Ready? Don't Get Stuck at Checkout!",
+          "content": "Before placing your order, double-check your payment method (credit card details, PayPal login). A smooth checkout process is crucial for this last-minute goal, boosting your success chance by 15%.",
+          "type": "tip"
+        },
+        {
+          "id": "N3",
+          "title": "Stay Agile: Have a Backup Plan!",
+          "content": "If your first choice for buying the PS5 falls through (e.g., out of stock, website issues), immediately pivot to your next best option. This flexibility is key to overcoming last-minute hurdles and maintains your high success probability.",
+          "type": "info"
+        }
+      ],
+      "priorityScore": 0
+    },
+    {
+      "id": "k091hq6xs",
+      "userId": "f6Cg3NkHxJT9WzEBjxDBpahE9ia2",
+      "goal": "Buy a PS5",
+      "deadline": "2026-07-04T18:11:56.901Z",
+      "title": "Buy a PS5",
+      "priority": "medium",
+      "estimatedHours": 3,
+      "dailyCapacity": 4,
+      "tags": [],
+      "createdAt": "2026-06-27T07:23:46.765Z",
+      "status": "completed",
+      "confidenceScore": 95,
+      "shadowTimeline": {
+        "bestCaseHours": 2,
+        "expectedCaseHours": 3,
+        "worstCaseHours": 4
+      },
+      "milestones": [
+        {
+          "id": "M1",
+          "name": "Stock Verified",
+          "description": "Locate and confirm physical availability of the console at local retailers.",
+          "deadline": "By 10:00 AM UTC"
+        },
+        {
+          "id": "M2",
+          "name": "Purchase Completed",
+          "description": "Complete payment and secure the console for pickup.",
+          "deadline": "By 12:00 PM UTC"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "T1",
+          "name": "Check Online Inventory",
+          "description": "Search major retailers (Best Buy, Target, GameStop, Walmart) for local stock.",
+          "durationMinutes": 30,
+          "priority": "high",
+          "order": 0,
+          "dependencies": [],
+          "reasoning": "Must identify potential stock locations before comparing options or traveling.",
+          "scheduledTime": "08:00 AM UTC",
+          "milestoneId": "M1",
+          "status": "completed",
+          "completedAt": "2026-06-27T17:57:16.534Z"
+        },
+        {
+          "id": "T2",
+          "name": "Compare Bundles and Prices",
+          "description": "Evaluate which retailer offers the best value or bundle deals.",
+          "durationMinutes": 30,
+          "priority": "medium",
+          "order": 1,
+          "dependencies": [
+            "T1"
+          ],
+          "reasoning": "Comparing options ensures we do not overpay, but is dependent on finding stock first.",
+          "scheduledTime": "08:30 AM UTC",
+          "milestoneId": "M1",
+          "status": "completed",
+          "completedAt": "2026-06-27T17:57:27.925Z"
+        },
+        {
+          "id": "T3",
+          "name": "Verify Stock via Phone",
+          "description": "Call the top 2 local stores to confirm physical inventory matches online status.",
+          "durationMinutes": 30,
+          "priority": "high",
+          "order": 2,
+          "dependencies": [
+            "T2"
+          ],
+          "reasoning": "Online inventory systems can lag; physical verification prevents wasted travel time.",
+          "scheduledTime": "09:00 AM UTC",
+          "milestoneId": "M1",
+          "status": "completed",
+          "completedAt": "2026-06-27T17:57:25.342Z"
+        },
+        {
+          "id": "T4",
+          "name": "Complete Online Purchase",
+          "description": "Secure the PS5 by purchasing online with 'In-Store Pickup' selected.",
+          "durationMinutes": 30,
+          "priority": "high",
+          "order": 3,
+          "dependencies": [
+            "T3"
+          ],
+          "reasoning": "Securing the item online guarantees it won't be sold to someone else while traveling.",
+          "scheduledTime": "09:30 AM UTC",
+          "milestoneId": "M2",
+          "status": "completed",
+          "completedAt": "2026-06-27T17:57:26.573Z"
+        },
+        {
+          "id": "T5",
+          "name": "Pick Up Console",
+          "description": "Drive to the selected retail store and retrieve the purchased PS5.",
+          "durationMinutes": 60,
+          "priority": "high",
+          "order": 4,
+          "dependencies": [
+            "T4"
+          ],
+          "reasoning": "Final physical acquisition step to complete the goal before the deadline.",
+          "scheduledTime": "11:00 AM UTC",
+          "milestoneId": "M2",
+          "status": "completed",
+          "completedAt": "2026-06-27T17:57:27.142Z"
+        }
+      ],
+      "failurePrediction": {
+        "probability": 5,
+        "successProbability": 95,
+        "bottleneck": "Compare Bundles and Prices",
+        "reason": "Urgency strain is 50% against available capacity. Other active sibling backlog requires 51.0 hours.",
+        "suggestedFix": "Workload is dense. Restructure \"Buy a PS5\" until high priority sibling backlog of 51.0 hours is cleared."
+      },
+      "decisionLog": [
+        {
+          "id": "D1",
+          "agent": "Planner",
+          "action": "Created 5-step sequential plan",
+          "reasoning": "Broke down the purchase process into logical steps to ensure efficiency and minimize wasted travel time."
+        },
+        {
+          "id": "D2",
+          "agent": "Priority",
+          "action": "Prioritized stock verification and online reservation",
+          "reasoning": "Ensured physical verification and online payment are high priority to prevent stock loss."
+        },
+        {
+          "id": "D3",
+          "agent": "Risk",
+          "action": "Calculated shadow timeline and failure risk",
+          "reasoning": "Assessed stock volatility and set a 25% failure risk, mitigated by recommending online reservation."
+        },
+        {
+          "id": "D4",
+          "agent": "Replanner",
+          "action": "Formulated backup plan",
+          "reasoning": "Established a trigger to switch to same-day delivery or trusted local resellers if retail stock is completely depleted."
+        },
+        {
+          "id": "D5",
+          "agent": "Coach",
+          "action": "Drafted action-oriented notifications",
+          "reasoning": "Designed notifications to prompt immediate action on high-priority tasks to stay ahead of the deadline."
+        }
+      ],
+      "notifications": [
+        {
+          "id": "N1",
+          "title": "Start Stock Search Now",
+          "content": "Check online inventory immediately. Early action increases the chance of finding stock before stores get busy.",
+          "type": "tip"
+        },
+        {
+          "id": "N2",
+          "title": "Call Before You Drive",
+          "content": "Do not drive to the store without calling first or securing an online order. This prevents wasted time and fuel.",
+          "type": "warning"
+        },
+        {
+          "id": "N3",
+          "title": "Secure via Online Pickup",
+          "content": "Complete the purchase online for in-store pickup to lock in your console immediately.",
+          "type": "success"
+        }
+      ],
+      "priorityScore": 0
+    },
+    {
+      "id": "d9obb2j60",
+      "userId": "f6Cg3NkHxJT9WzEBjxDBpahE9ia2",
+      "goal": "Plan a Trip",
+      "deadline": "2026-05-22T18:00:00.000Z",
+      "title": "Plan a Trip",
+      "priority": "medium",
+      "estimatedHours": 2,
+      "dailyCapacity": 4,
+      "tags": [],
+      "createdAt": "2026-06-29T10:29:43.617Z",
+      "status": "expired",
+      "confidenceScore": 98,
+      "shadowTimeline": {
+        "bestCaseHours": 2,
+        "expectedCaseHours": 2,
+        "worstCaseHours": 3
+      },
+      "milestones": [
+        {
+          "id": "milestone_1",
+          "name": "Phase I: Scoping & Setup",
+          "description": "Define tactical bounds, assemble materials, and initiate core environment setup.",
+          "deadline": "First 20% of timeline"
+        },
+        {
+          "id": "milestone_2",
+          "name": "Phase II: Direct Active Sprint",
+          "description": "Major production block focused on implementing core complexity objectives.",
+          "deadline": "Middle 60% of timeline"
+        },
+        {
+          "id": "milestone_3",
+          "name": "Phase III: Polishing & Validation",
+          "description": "Troubleshoot edge cases, polish overall aesthetics, and verify final quality checklists.",
+          "deadline": "Final 20% of timeline"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "task_1",
+          "milestoneId": "milestone_1",
+          "name": "Decide travel dates and outline the dream locations you want to experience",
+          "description": "Light check-item for your upcoming trip to help you stay organized without being bogged down.",
+          "durationMinutes": 20,
+          "priority": "low",
+          "order": 0,
+          "dependencies": [],
+          "reasoning": "Trip planning is a low-stakes, joyful mission. Keeping this item extremely short and relaxed!",
+          "scheduledTime": "Flexible Slot",
+          "status": "todo",
+          "completedAt": null
+        },
+        {
+          "id": "task_2",
+          "milestoneId": "milestone_2",
+          "name": "Secure main transportation booking (flights, train tickets, or road-trip route)",
+          "description": "Light check-item for your upcoming trip to help you stay organized without being bogged down.",
+          "durationMinutes": 20,
+          "priority": "high",
+          "order": 1,
+          "dependencies": [
+            "task_1"
+          ],
+          "reasoning": "Trip planning is a low-stakes, joyful mission. Keeping this item extremely short and relaxed!",
+          "scheduledTime": "Flexible Slot",
+          "status": "todo",
+          "completedAt": null
+        },
+        {
+          "id": "task_3",
+          "milestoneId": "milestone_2",
+          "name": "Lock down cozy accommodations and map out top-rated local food spots to try",
+          "description": "Light check-item for your upcoming trip to help you stay organized without being bogged down.",
+          "durationMinutes": 20,
+          "priority": "low",
+          "order": 2,
+          "dependencies": [
+            "task_2"
+          ],
+          "reasoning": "Trip planning is a low-stakes, joyful mission. Keeping this item extremely short and relaxed!",
+          "scheduledTime": "Flexible Slot",
+          "status": "todo",
+          "completedAt": null
+        },
+        {
+          "id": "task_4",
+          "milestoneId": "milestone_3",
+          "name": "Pack essentials and pack light (let travel be a liberating adventure, not a chore!)",
+          "description": "Light check-item for your upcoming trip to help you stay organized without being bogged down.",
+          "durationMinutes": 20,
+          "priority": "low",
+          "order": 3,
+          "dependencies": [
+            "task_3"
+          ],
+          "reasoning": "Trip planning is a low-stakes, joyful mission. Keeping this item extremely short and relaxed!",
+          "scheduledTime": "Flexible Slot",
+          "status": "todo",
+          "completedAt": null
+        }
+      ],
+      "failurePrediction": {
+        "probability": 3,
+        "successProbability": 97,
+        "bottleneck": "Minimal planning overhead",
+        "reason": "AI Friend Note: This is a fun, low-stakes vacation mission! Enjoy the journey. We allocated just a tiny bit of planning time so you can get out there and explore!",
+        "suggestedFix": "Do not overthink it! Complete the booking tasks and prepare to pack!"
+      },
+      "decisionLog": [
+        {
+          "id": "dec_initial_1782728986548",
+          "agent": "Orchestrating Planner",
+          "action": "Warm AI Friend Blueprint Active",
+          "reasoning": "Recognized this as a wonderful low-risk adventure plan. Kept tasks light and durations minimal so you can relax."
+        }
+      ],
+      "notifications": [
+        {
+          "id": "notif_1_1782728986548",
+          "title": "Bon Voyage!",
+          "content": "Your AI Friend has set up a super-light planning checklist. Less planning, more exploring!",
+          "type": "success"
+        },
+        {
+          "id": "notif_2_1782728986548",
+          "title": "Zero Stress Shield",
+          "content": "Low-stakes mission detected. Travel safe and enjoy every single moment!",
+          "type": "info"
+        }
+      ],
+      "priorityScore": 0
+    },
+    {
+      "id": "52hwktpyy",
+      "userId": "f6Cg3NkHxJT9WzEBjxDBpahE9ia2",
+      "goal": "Formulate code, database schema, landing page, and staging deployment within 3 days.",
+      "deadline": "2026-06-28T18:00:00.000Z",
+      "title": "Deploy High-Stakes MVP",
+      "priority": "high",
+      "estimatedHours": 24,
+      "dailyCapacity": 4,
+      "tags": [
+        "coding",
+        "startup",
+        "launch"
+      ],
+      "createdAt": "2026-06-26T09:59:12.359Z",
+      "status": "expired",
+      "confidenceScore": 83,
+      "shadowTimeline": {
+        "bestCaseHours": 18,
+        "expectedCaseHours": 24,
+        "worstCaseHours": 36
+      },
+      "milestones": [
+        {
+          "id": "m1",
+          "name": "Database & Core Code Architecture",
+          "description": "Establish the database schema and core backend API endpoints.",
+          "deadline": "By Day 1 Evening (2026-06-26T21:00:00Z)"
+        },
+        {
+          "id": "m2",
+          "name": "Landing Page & Frontend Integration",
+          "description": "Develop the landing page and connect it to the backend services.",
+          "deadline": "By Day 2 Evening (2026-06-27T21:00:00Z)"
+        },
+        {
+          "id": "m3",
+          "name": "Staging Deployment & Testing",
+          "description": "Deploy the integrated application to staging and run final validation tests.",
+          "deadline": "By Day 3 Afternoon (2026-06-28T17:00:00Z)"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "t1",
+          "name": "Design Database Schema & Models",
+          "description": "Draft the relational schema, set up migrations, and initialize the database local instance.",
+          "durationMinutes": 180,
+          "priority": "high",
+          "order": 0,
+          "dependencies": [],
+          "reasoning": "Database design is scheduled first because all subsequent backend and frontend data flows depend on a stable schema.",
+          "scheduledTime": "2026-06-26T10:00:00Z",
+          "milestoneId": "m1",
+          "status": "skipped",
+          "completedAt": null
+        },
+        {
+          "id": "t2",
+          "name": "Develop Core Backend API & Business Logic",
+          "description": "Implement essential API endpoints, authentication, and core business logic controllers.",
+          "durationMinutes": 360,
+          "priority": "high",
+          "order": 1,
+          "dependencies": [
+            "t1"
+          ],
+          "reasoning": "Backend APIs must be functional before frontend integration can begin to prevent developer blocking.",
+          "scheduledTime": "2026-06-26T17:00:00Z",
+          "milestoneId": "m1",
+          "status": "skipped",
+          "completedAt": null
+        },
+        {
+          "id": "t3",
+          "name": "Build Landing Page UI & Components",
+          "description": "Create the responsive landing page layout, hero section, and lead capture forms.",
+          "durationMinutes": 300,
+          "priority": "medium",
+          "order": 2,
+          "dependencies": [],
+          "reasoning": "UI development can run in parallel or immediately after backend setup, utilizing mock data if needed.",
+          "scheduledTime": "2026-06-27T08:00:00Z",
+          "milestoneId": "m2",
+          "status": "skipped",
+          "completedAt": null
+        },
+        {
+          "id": "t4",
+          "name": "Integrate Frontend with Backend APIs",
+          "description": "Connect the landing page forms and dynamic components to the live backend API endpoints.",
+          "durationMinutes": 180,
+          "priority": "high",
+          "order": 3,
+          "dependencies": [
+            "t2",
+            "t3"
+          ],
+          "reasoning": "Integration is scheduled once both frontend UI and backend APIs are ready, ensuring end-to-end data flow works.",
+          "scheduledTime": "2026-06-27T17:00:00Z",
+          "milestoneId": "m2",
+          "status": "completed",
+          "completedAt": "2026-06-27T17:58:20.414Z"
+        },
+        {
+          "id": "t5",
+          "name": "Configure Staging Environment & CI/CD",
+          "description": "Set up the cloud hosting environment, environment variables, and automated deployment pipelines.",
+          "durationMinutes": 180,
+          "priority": "medium",
+          "order": 4,
+          "dependencies": [
+            "t4"
+          ],
+          "reasoning": "Staging configuration is scheduled prior to final deployment to isolate infrastructure issues early.",
+          "scheduledTime": "2026-06-28T08:00:00Z",
+          "milestoneId": "m3",
+          "status": "skipped",
+          "completedAt": null
+        },
+        {
+          "id": "t6",
+          "name": "Deploy to Staging & Run End-to-End Tests",
+          "description": "Trigger the deployment pipeline, verify SSL, and perform final smoke testing on the live staging URL.",
+          "durationMinutes": 135,
+          "priority": "high",
+          "order": 5,
+          "dependencies": [
+            "t5"
+          ],
+          "reasoning": "Final deployment and testing are scheduled at the end to ensure the staging environment matches production expectations.",
+          "scheduledTime": "2026-06-28T14:00:00Z",
+          "milestoneId": "m3",
+          "status": "completed",
+          "completedAt": "2026-06-27T17:58:21.926Z"
+        }
+      ],
+      "failurePrediction": {
+        "probability": 12,
+        "successProbability": 88,
+        "bottleneck": "None",
+        "reason": "All planned deliverables for this focus stream have been fully checked off.",
+        "suggestedFix": "Maintain nominal momentum and celebrate!"
+      },
+      "decisionLog": [
+        {
+          "id": "dl1",
+          "agent": "Planner",
+          "action": "Deconstruct MVP into 6 sequential tasks",
+          "reasoning": "Ensures clear progression from database design to final staging deployment within the 3-day window."
+        },
+        {
+          "id": "dl2",
+          "agent": "Priority",
+          "action": "Sequence database and backend tasks first",
+          "reasoning": "Prevents frontend developers from being blocked by missing APIs and data structures."
+        },
+        {
+          "id": "dl3",
+          "agent": "Risk",
+          "action": "Identify 12-hour capacity gap",
+          "reasoning": "Highlights that 24 hours of work cannot fit into 12 hours of user availability without using templates."
+        },
+        {
+          "id": "dl4",
+          "agent": "Replanner",
+          "action": "Define recovery triggers for landing page scope",
+          "reasoning": "Allows the user to defer complex UI animations if backend integration takes longer than expected."
+        },
+        {
+          "id": "dl5",
+          "agent": "Coach",
+          "action": "Schedule notifications for morning and evening peak hours",
+          "reasoning": "Aligns reminders with the user's preferred working times to maximize focus and productivity."
+        }
+      ],
+      "notifications": [
+        {
+          "id": "n1",
+          "title": "Kickoff: Design Database Schema",
+          "content": "Start designing your database schema now. Getting this right early prevents costly refactoring during frontend integration.",
+          "type": "info"
+        },
+        {
+          "id": "n2",
+          "title": "Critical Warning: Use Boilerplates",
+          "content": "You have a 12-hour capacity deficit. Use a pre-built landing page template to save 5 hours and keep your staging deadline viable.",
+          "type": "warning"
+        },
+        {
+          "id": "n3",
+          "title": "Evening Push: Deploy to Staging",
+          "content": "Begin staging configuration. Deploying early tonight ensures you have a buffer to debug environment variables before tomorrow's deadline.",
+          "type": "success"
+        }
+      ],
+      "priorityScore": 0
+    },
+    {
+      "id": "w6847ih61",
+      "userId": "f6Cg3NkHxJT9WzEBjxDBpahE9ia2",
+      "goal": "Write final draft, analyze data benchmarks, refine structure and review citations.",
+      "deadline": "2026-06-30T18:00:00.000Z",
+      "title": "Submit Master Thesis",
+      "priority": "medium",
+      "estimatedHours": 7,
+      "dailyCapacity": 4,
+      "tags": [],
+      "createdAt": "2026-06-29T09:10:35.808Z",
+      "status": "completed",
+      "confidenceScore": 95,
+      "shadowTimeline": {
+        "bestCaseHours": 6,
+        "expectedCaseHours": 7,
+        "worstCaseHours": 8
+      },
+      "milestones": [
+        {
+          "id": "M1",
+          "name": "Core Content Refinement Complete",
+          "description": "All data analysis and structural refinements are finalized, ready for the final language polish.",
+          "deadline": "By June 29th evening"
+        },
+        {
+          "id": "M2",
+          "name": "Thesis Ready for Submission",
+          "description": "All checks, proofreading, and formatting are complete, and the thesis is prepared for upload.",
+          "deadline": "By June 30th afternoon"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "T1",
+          "name": "Review Overall Structure & Flow",
+          "description": "Take a holistic look at your thesis. Does it flow logically? Are your arguments clear and well-supported? This is about the big picture!",
+          "durationMinutes": 90,
+          "priority": "high",
+          "order": 0,
+          "dependencies": [],
+          "reasoning": "This is the foundational step. Before diving into details, ensuring the overall structure and argument flow is sound will save time and stress later. It's prioritized first to establish a strong base.",
+          "scheduledTime": "June 29th morning",
+          "status": "completed",
+          "completedAt": "2026-06-29T13:24:07.541Z"
+        },
+        {
+          "id": "T2",
+          "name": "Analyze Data Benchmarks & Integrate Findings",
+          "description": "Double-check all your data, figures, and tables. Ensure interpretations are accurate and findings are clearly integrated into your narrative.",
+          "durationMinutes": 120,
+          "priority": "high",
+          "order": 1,
+          "dependencies": [
+            "T1"
+          ],
+          "reasoning": "After confirming the structure, the next critical step is to ensure the core evidence is robust and correctly presented. This is a high-impact task directly supporting your thesis's validity.",
+          "scheduledTime": "June 29th late morning/afternoon",
+          "status": "completed",
+          "completedAt": "2026-06-29T13:28:45.054Z"
+        },
+        {
+          "id": "T3",
+          "name": "Refine Language & Proofread Final Draft",
+          "description": "Go through your thesis sentence by sentence. Polish your prose, check for grammar, spelling, punctuation, and clarity. Read it aloud if it helps!",
+          "durationMinutes": 90,
+          "priority": "high",
+          "order": 2,
+          "dependencies": [
+            "T2"
+          ],
+          "reasoning": "With the structure and data confirmed, it's time to make your writing shine. This task is crucial for readability and professional presentation, making it a high priority after content finalization.",
+          "scheduledTime": "June 30th morning",
+          "status": "completed",
+          "completedAt": "2026-06-29T13:28:46.917Z"
+        },
+        {
+          "id": "T4",
+          "name": "Comprehensive Citation & Reference Review",
+          "description": "Verify every in-text citation matches an entry in your bibliography. Check for consistent formatting according to your university's guidelines.",
+          "durationMinutes": 60,
+          "priority": "high",
+          "order": 3,
+          "dependencies": [
+            "T3"
+          ],
+          "reasoning": "Academic integrity and proper attribution are paramount. This task is high priority to avoid any last-minute issues with referencing, ensuring your hard work is properly credited.",
+          "scheduledTime": "June 30th late morning",
+          "status": "completed",
+          "completedAt": "2026-06-29T13:28:47.501Z"
+        },
+        {
+          "id": "T5",
+          "name": "Final Read-Through & Formatting Check",
+          "description": "One last, quick pass through the entire document. Check page numbers, headings, table of contents, and overall formatting. Look for any glaring errors that might have slipped through.",
+          "durationMinutes": 45,
+          "priority": "high",
+          "order": 4,
+          "dependencies": [
+            "T4"
+          ],
+          "reasoning": "This is your final safety net. A quick, comprehensive check ensures everything is perfectly aligned and presented, minimizing the chance of minor errors impacting your submission. It's a high priority as the last quality control step.",
+          "scheduledTime": "June 30th early afternoon",
+          "status": "completed",
+          "completedAt": "2026-06-29T13:28:47.948Z"
+        },
+        {
+          "id": "T6",
+          "name": "Prepare for Submission",
+          "description": "Convert your thesis to the required format (e.g., PDF), check file size, and complete the upload process to your university's portal.",
+          "durationMinutes": 15,
+          "priority": "high",
+          "order": 5,
+          "dependencies": [
+            "T5"
+          ],
+          "reasoning": "The final, critical step! All your hard work culminates here. This task is high priority to ensure the actual submission process is smooth and successful, leaving no room for technical glitches.",
+          "scheduledTime": "June 30th afternoon",
+          "status": "completed",
+          "completedAt": "2026-06-29T13:28:48.493Z"
+        }
+      ],
+      "failurePrediction": {
+        "probability": 5,
+        "successProbability": 95,
+        "bottleneck": "Prepare for Submission",
+        "reason": "Urgency strain is 5% against available capacity. Other active sibling backlog requires 4.9 hours.",
+        "suggestedFix": "Workload is dense. Restructure \"Submit Master Thesis\" until high priority sibling backlog of 4.9 hours is cleared."
+      },
+      "decisionLog": [
+        {
+          "id": "DL1",
+          "agent": "Orchestrator/Friend",
+          "action": "Evaluate Mission Impact and Plan Design",
+          "reasoning": "My dear friend, this 'Submit Master Thesis' mission is incredibly significant – it's a culmination of so much hard work and dedication! This is a HIGH REAL-WORLD IMPACT mission, meaning it deserves our absolute best, most caring, and most robust planning. The deadline is very close, which adds a layer of pressure, but we're going to tackle it together, stress-free. I've designed this plan to be super focused and efficient, breaking down the monumental task into manageable, sequential steps. We're allocating realistic time for each critical component, ensuring you have dedicated blocks for deep work without feeling rushed. My goal is to help you cross this finish line with confidence and a sense of accomplishment, knowing every detail has been carefully considered. We're aiming for a smooth, successful submission, celebrating all your efforts!"
+        },
+        {
+          "id": "DL2",
+          "agent": "Planner",
+          "action": "Subtask Breakdown and Effort Estimation",
+          "reasoning": "I've broken down your thesis submission into 6 clear, sequential steps. Given the high stakes and the need for thoroughness, I've estimated a total of 7 hours of focused work. This fits perfectly within your maximum 4 hours per day for today and tomorrow, leaving you a comfortable buffer before the deadline. Each task builds on the last, ensuring a logical and efficient workflow."
+        },
+        {
+          "id": "DL3",
+          "agent": "Priority",
+          "action": "Dependency and Priority Assignment",
+          "reasoning": "For a Master Thesis, every step is crucial, so I've marked all tasks as 'high priority'. They are also set up sequentially, as it makes the most sense to refine the structure before diving into data, then polishing language, and finally checking citations and formatting. This ensures a systematic and stress-free progression towards your final submission."
+        },
+        {
+          "id": "DL4",
+          "agent": "Risk",
+          "action": "Shadow Timeline and Failure Analysis",
+          "reasoning": "I've calculated a 'best case' of 6 hours, an 'expected case' of 7 hours, and a 'worst case' of 8 hours. This gives us a realistic range. While the deadline is tight, our plan fits within your available time, giving us a high success probability of 90%. The main bottleneck is the sheer volume of detailed work in a short time, but by breaking it down and focusing, we'll overcome it!"
+        },
+        {
+          "id": "DL5",
+          "agent": "Replanner",
+          "action": "Initial Recovery Trigger Setup",
+          "reasoning": "To keep things smooth, if any task takes about 30% longer than planned, we'll pause and quickly adjust the remaining schedule. All these tasks are absolutely critical, so there's nothing we can defer. But don't worry, we've built in a buffer, and we'll adapt together if needed!"
+        },
+        {
+          "id": "DL6",
+          "agent": "Coach",
+          "action": "Personalized Notifications Generation",
+          "reasoning": "I've crafted three supportive notifications to keep you motivated and on track. They focus on the 'what,' 'why,' and 'impact' from a caring friend's perspective, acknowledging the importance of this mission and offering actionable, encouraging advice."
+        }
+      ],
+      "notifications": [
+        {
+          "id": "N1",
+          "title": "You've Got This! Master Thesis Countdown!",
+          "content": "Hey friend! This is it, the final stretch for your Master Thesis! Remember all the hard work you've poured into this? Now's the time for those last, crucial polishes. Start with 'Review Overall Structure & Flow' (Task T1) today. Getting the big picture right first will make all the detailed checks so much smoother and boost your confidence immensely. You're so close to this incredible achievement!",
+          "type": "tip"
+        },
+        {
+          "id": "N2",
+          "title": "Deep Dive into Your Data & Words!",
+          "content": "Good job on the structural review! Now, let's give your data and writing the attention they deserve with 'Analyze Data Benchmarks' (Task T2) and 'Refine Language & Proofread' (Task T3). These are the heart of your thesis, and ensuring their accuracy and clarity will significantly strengthen your arguments. Taking your time here directly impacts the quality and academic rigor of your submission. You're doing amazing!",
+          "type": "info"
+        },
+        {
+          "id": "N3",
+          "title": "The Finish Line is in Sight – Final Checks!",
+          "content": "Wow, look at you go! You're almost there! For your final push, focus on 'Comprehensive Citation & Reference Review' (Task T4) and 'Final Read-Through & Formatting Check' (Task T5). These last steps are like putting a perfect bow on your masterpiece. Double-checking these details ensures everything is polished and professional, giving you peace of mind and a flawless submission. You've worked so hard, and you're going to nail this!",
+          "type": "success"
+        }
+      ],
+      "priorityScore": 0
+    },
+    {
+      "id": "h2chh0z40",
+      "userId": "f6Cg3NkHxJT9WzEBjxDBpahE9ia2",
+      "goal": "Design a 10-slide startup deck, build dynamic Excel cash-burn forecast model, and host practice demo run.",
+      "deadline": "2026-06-27T18:00:00.000Z",
+      "title": "Curate Pitch Deck & Financials",
+      "priority": "medium",
+      "estimatedHours": 10,
+      "dailyCapacity": 4,
+      "tags": [
+        "business",
+        "finance",
+        "deck"
+      ],
+      "createdAt": "2026-06-23T18:18:29.675Z",
+      "status": "completed",
+      "confidenceScore": 95,
+      "shadowTimeline": {
+        "bestCaseHours": 4,
+        "expectedCaseHours": 5,
+        "worstCaseHours": 7
+      },
+      "milestones": [
+        {
+          "id": "milestone_1",
+          "name": "Phase I: Scoping & Setup",
+          "description": "Define tactical bounds, assemble materials, and initiate core environment setup.",
+          "deadline": "First 20% of timeline"
+        },
+        {
+          "id": "milestone_2",
+          "name": "Phase II: Direct Active Sprint",
+          "description": "Major production block focused on implementing core complexity objectives.",
+          "deadline": "Middle 60% of timeline"
+        },
+        {
+          "id": "milestone_3",
+          "name": "Phase III: Polishing & Validation",
+          "description": "Troubleshoot edge cases, polish overall aesthetics, and verify final quality checklists.",
+          "deadline": "Final 20% of timeline"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "task_1",
+          "milestoneId": "milestone_1",
+          "name": "Define core specifications and outline success factors for: \"Design a 10-slide startup deck, build dynamic Excel cash-burn forecast model, and host practice demo run.\"",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 45,
+          "priority": "high",
+          "order": 0,
+          "dependencies": [],
+          "reasoning": "Creating firm boundaries upfront helps avoid distraction and scope creep later.",
+          "scheduledTime": "09:00 - 09:45",
+          "status": "completed",
+          "completedAt": "2026-06-26T09:56:35.217Z"
+        },
+        {
+          "id": "task_2",
+          "milestoneId": "milestone_2",
+          "name": "Structure physical progression timeline relative to absolute deadline: \"2026-06-27T18:00:00Z\"",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 45,
+          "priority": "medium",
+          "order": 1,
+          "dependencies": [
+            "task_1"
+          ],
+          "reasoning": "Aligned sequentially to preserve flow and handle unexpected real-world bottlenecks.",
+          "scheduledTime": "10:00 - 11:15",
+          "status": "completed",
+          "completedAt": "2026-06-26T09:56:38.249Z"
+        },
+        {
+          "id": "task_3",
+          "milestoneId": "milestone_2",
+          "name": "Execute active production block and synthesize the core deliverables",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 120,
+          "priority": "high",
+          "order": 2,
+          "dependencies": [
+            "task_2"
+          ],
+          "reasoning": "Dedicated high-duration segment allocated to solve the core architectural bottlenecks.",
+          "scheduledTime": "11:30 - 13:30",
+          "status": "completed",
+          "completedAt": "2026-06-27T17:58:02.814Z"
+        },
+        {
+          "id": "task_4",
+          "milestoneId": "milestone_2",
+          "name": "Validate outcomes, troubleshoot quality issues, and resolve structural defects",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 45,
+          "priority": "medium",
+          "order": 3,
+          "dependencies": [
+            "task_3"
+          ],
+          "reasoning": "Aligned sequentially to preserve flow and handle unexpected real-world bottlenecks.",
+          "scheduledTime": "14:30 - 15:30",
+          "status": "completed",
+          "completedAt": "2026-06-27T17:58:08.397Z"
+        },
+        {
+          "id": "task_5",
+          "milestoneId": "milestone_3",
+          "name": "Conduct final visual aesthetics polish and finalize deployment submission",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 45,
+          "priority": "low",
+          "order": 4,
+          "dependencies": [
+            "task_4"
+          ],
+          "reasoning": "Aligned sequentially to preserve flow and handle unexpected real-world bottlenecks.",
+          "scheduledTime": "16:00 - 16:45",
+          "status": "completed",
+          "completedAt": "2026-06-27T17:58:09.005Z"
+        }
+      ],
+      "failurePrediction": {
+        "probability": 5,
+        "successProbability": 95,
+        "bottleneck": "Conduct final visual aesthetics polish and finalize deployment submission",
+        "reason": "Urgency strain is 188% against available capacity. Other active sibling backlog requires 26.0 hours.",
+        "suggestedFix": "Workload is dense. Restructure \"Curate Pitch Deck & Financials\" until high priority sibling backlog of 26.0 hours is cleared."
+      },
+      "decisionLog": [
+        {
+          "id": "dec_initial_1782238711898",
+          "agent": "Orchestrating Planner",
+          "action": "Local Strategic Framework Deployed",
+          "reasoning": "The co-pilot safely established a fully-calibrated local blueprint, resolving backend service latency gracefully."
+        }
+      ],
+      "notifications": [
+        {
+          "id": "notif_1_1782238711898",
+          "title": "Standby Model Engaged",
+          "content": "Your life-saver agentic co-pilot launched a high-performance local blueprint optimized for your target goal.",
+          "type": "success"
+        },
+        {
+          "id": "notif_2_1782238711898",
+          "title": "Buffer Calibrated",
+          "content": "Workload of expected Case hours aligned and validated. Zero sign-in blocks discovered.",
+          "type": "info"
+        }
+      ],
+      "priorityScore": 0
+    },
+    {
+      "goal": "Formulate code, database schema, landing page, and staging deployment within 3 days.",
+      "confidenceScore": 91,
+      "shadowTimeline": {
+        "bestCaseHours": 5,
+        "expectedCaseHours": 6,
+        "worstCaseHours": 8
+      },
+      "milestones": [
+        {
+          "id": "milestone_1",
+          "name": "Phase I: Scoping & Setup",
+          "description": "Define tactical bounds, assemble materials, and initiate core environment setup.",
+          "deadline": "First 20% of timeline"
+        },
+        {
+          "id": "milestone_2",
+          "name": "Phase II: Direct Active Sprint",
+          "description": "Major production block focused on implementing core complexity objectives.",
+          "deadline": "Middle 60% of timeline"
+        },
+        {
+          "id": "milestone_3",
+          "name": "Phase III: Polishing & Validation",
+          "description": "Troubleshoot edge cases, polish overall aesthetics, and verify final quality checklists.",
+          "deadline": "Final 20% of timeline"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "task_1",
+          "milestoneId": "milestone_1",
+          "name": "Specify user stories, design database structures, and identify API endpoints",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 45,
+          "priority": "high",
+          "order": 0,
+          "dependencies": [],
+          "reasoning": "Creating firm boundaries upfront helps avoid distraction and scope creep later.",
+          "scheduledTime": "09:00 - 09:45",
+          "status": "completed",
+          "completedAt": "2026-06-23T18:15:57.825Z"
+        },
+        {
+          "id": "task_2",
+          "milestoneId": "milestone_2",
+          "name": "Bootstrap database schema migrations and secure local environment configuration",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 45,
+          "priority": "medium",
+          "order": 1,
+          "dependencies": [
+            "task_1"
+          ],
+          "reasoning": "Aligned sequentially to preserve flow and handle unexpected real-world bottlenecks.",
+          "scheduledTime": "10:00 - 11:15",
+          "status": "skipped",
+          "completedAt": null
+        },
+        {
+          "id": "task_3",
+          "milestoneId": "milestone_2",
+          "name": "Implement core routing backend architecture and service orchestrators",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 120,
+          "priority": "high",
+          "order": 2,
+          "dependencies": [
+            "task_2"
+          ],
+          "reasoning": "Dedicated high-duration segment allocated to solve the core architectural bottlenecks.",
+          "scheduledTime": "11:30 - 13:30",
+          "status": "completed",
+          "completedAt": "2026-06-23T18:16:33.960Z"
+        },
+        {
+          "id": "task_4",
+          "milestoneId": "milestone_2",
+          "name": "Design clean modular user interface screens with polished responsive css styles",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 60,
+          "priority": "medium",
+          "order": 3,
+          "dependencies": [
+            "task_3"
+          ],
+          "reasoning": "Aligned sequentially to preserve flow and handle unexpected real-world bottlenecks.",
+          "scheduledTime": "14:30 - 15:30",
+          "status": "completed",
+          "completedAt": "2026-06-27T18:22:57.870Z"
+        },
+        {
+          "id": "task_5",
+          "milestoneId": "milestone_2",
+          "name": "Debug cross-endpoint logic gates, error handlers, and unhandled exceptions",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 45,
+          "priority": "medium",
+          "order": 4,
+          "dependencies": [
+            "task_4"
+          ],
+          "reasoning": "Aligned sequentially to preserve flow and handle unexpected real-world bottlenecks.",
+          "scheduledTime": "16:00 - 16:45",
+          "status": "completed",
+          "completedAt": "2026-06-27T18:23:49.173Z"
+        },
+        {
+          "id": "task_6",
+          "milestoneId": "milestone_3",
+          "name": "Deploy main production bundle to hosting server and execute live validation tests",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 45,
+          "priority": "low",
+          "order": 5,
+          "dependencies": [
+            "task_5"
+          ],
+          "reasoning": "Aligned sequentially to preserve flow and handle unexpected real-world bottlenecks.",
+          "scheduledTime": "17:00 - 17:30",
+          "status": "completed",
+          "completedAt": "2026-06-27T18:23:50.174Z"
+        }
+      ],
+      "failurePrediction": {
+        "probability": 9,
+        "successProbability": 91,
+        "bottleneck": "Deploy main production bundle to hosting server and execute live validation tests",
+        "reason": "Urgency strain is 3% against available capacity. Other active sibling backlog requires 10.0 hours.",
+        "suggestedFix": "Workload is dense. Restructure \"Deploy High-Stakes MVP\" until high priority sibling backlog of 10.0 hours is cleared."
+      },
+      "decisionLog": [
+        {
+          "id": "dec_initial_1782233188666",
+          "agent": "Orchestrating Planner",
+          "action": "Local Strategic Framework Deployed",
+          "reasoning": "The co-pilot safely established a fully-calibrated local blueprint, resolving backend service latency gracefully.",
+          "timestamp": "Just now"
+        }
+      ],
+      "notifications": [
+        {
+          "id": "notif_1_1782233188666",
+          "title": "Standby Model Engaged",
+          "content": "Your life-saver agentic co-pilot launched a high-performance local blueprint optimized for your target goal.",
+          "type": "success",
+          "timestamp": "Coach Agent • Just now",
+          "read": false
+        },
+        {
+          "id": "notif_2_1782233188666",
+          "title": "Buffer Calibrated",
+          "content": "Workload of expected Case hours aligned and validated. Zero sign-in blocks discovered.",
+          "type": "info",
+          "timestamp": "Coach Agent • Just now",
+          "read": false
+        }
+      ],
+      "title": "Deploy High-Stakes MVP",
+      "priority": "medium",
+      "estimatedHours": 24,
+      "tags": [
+        "coding",
+        "startup",
+        "launch"
+      ],
+      "id": "mission_1782233186451",
+      "userId": "f6Cg3NkHxJT9WzEBjxDBpahE9ia2",
+      "createdAt": "2026-06-23T16:46:26.451Z",
+      "status": "completed",
+      "dailyCapacity": 4,
+      "priorityScore": 0,
+      "deadline": "2026-07-04T18:11:56.901Z"
+    },
+    {
+      "id": "4dlw88fh0",
+      "userId": "f6Cg3NkHxJT9WzEBjxDBpahE9ia2",
+      "goal": "Build a Project Report",
+      "deadline": "2026-06-30T18:00:00.000Z",
+      "title": "Build a Project Report",
+      "priority": "medium",
+      "estimatedHours": 6,
+      "dailyCapacity": 4,
+      "tags": [],
+      "createdAt": "2026-06-29T14:24:48.663Z",
+      "status": "completed",
+      "confidenceScore": 90,
+      "shadowTimeline": {
+        "bestCaseHours": 4,
+        "expectedCaseHours": 6,
+        "worstCaseHours": 9
+      },
+      "milestones": [
+        {
+          "id": "MS1",
+          "name": "Research & Outline Complete",
+          "description": "Establish the report structure and draft the introductory sections.",
+          "deadline": "By June 29 Evening"
+        },
+        {
+          "id": "MS2",
+          "name": "Drafting Complete",
+          "description": "Complete the core findings, analysis, and executive summary.",
+          "deadline": "By June 30 Afternoon"
+        },
+        {
+          "id": "MS3",
+          "name": "Final Submission Ready",
+          "description": "Perform final proofreading, formatting, and export the report.",
+          "deadline": "By June 30 4:00 PM"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "T1",
+          "name": "Gather data and outline the report structure",
+          "description": "Collect all necessary reference materials and create a detailed section-by-section outline.",
+          "durationMinutes": 60,
+          "priority": "high",
+          "order": 0,
+          "dependencies": [],
+          "reasoning": "Establishing a clear structure first prevents writer's block and ensures all required sections are covered.",
+          "scheduledTime": "09:00 AM",
+          "milestoneId": "MS1",
+          "status": "completed",
+          "completedAt": "2026-06-30T03:37:25.491Z"
+        },
+        {
+          "id": "T2",
+          "name": "Draft the introduction and methodology sections",
+          "description": "Write the background context, objectives, and the methodology used for the project.",
+          "durationMinutes": 90,
+          "priority": "medium",
+          "order": 1,
+          "dependencies": [
+            "T1"
+          ],
+          "reasoning": "Drafting the easier setup sections builds momentum for the complex analysis tomorrow.",
+          "scheduledTime": "11:00 AM",
+          "milestoneId": "MS1",
+          "status": "completed",
+          "completedAt": "2026-06-30T03:43:51.899Z"
+        },
+        {
+          "id": "T3",
+          "name": "Write the core findings and analysis section",
+          "description": "Present the main data, analyze the results, and write the core arguments of the report.",
+          "durationMinutes": 120,
+          "priority": "high",
+          "order": 2,
+          "dependencies": [
+            "T2"
+          ],
+          "reasoning": "This is the most critical and high-impact part of the report, scheduled fresh in the morning.",
+          "scheduledTime": "02:00 PM",
+          "milestoneId": "MS2",
+          "status": "skipped",
+          "completedAt": null
+        },
+        {
+          "id": "T4",
+          "name": "Draft the conclusion, recommendations, and executive summary",
+          "description": "Summarize the key takeaways, propose next steps, and write a concise executive summary.",
+          "durationMinutes": 45,
+          "priority": "medium",
+          "order": 3,
+          "dependencies": [
+            "T3"
+          ],
+          "reasoning": "The executive summary is best written after the core findings are fully articulated.",
+          "scheduledTime": "05:00 PM",
+          "milestoneId": "MS2",
+          "status": "completed",
+          "completedAt": "2026-06-30T03:43:53.634Z"
+        },
+        {
+          "id": "T5",
+          "name": "Review, format, and final proofreading",
+          "description": "Check for grammatical errors, ensure consistent formatting, and verify citations.",
+          "durationMinutes": 45,
+          "priority": "high",
+          "order": 4,
+          "dependencies": [
+            "T4"
+          ],
+          "reasoning": "Polishing and formatting ensure professional quality and prevent last-minute submission errors.",
+          "scheduledTime": "07:00 PM",
+          "milestoneId": "MS3",
+          "status": "completed",
+          "completedAt": "2026-06-30T03:43:43.219Z"
+        }
+      ],
+      "failurePrediction": {
+        "probability": 10,
+        "successProbability": 90,
+        "bottleneck": "Draft the conclusion, recommendations, and executive summary",
+        "reason": "Urgency strain is 32% against available capacity. Other active sibling backlog requires 0.0 hours.",
+        "suggestedFix": "Workload is dense. Restructure \"Build a Project Report\" until high priority sibling backlog of 0.0 hours is cleared."
+      },
+      "decisionLog": [
+        {
+          "id": "DL1",
+          "agent": "Orchestrator",
+          "action": "Evaluate Mission Impact",
+          "reasoning": "As your AI Friend, I recognize that a Project Report is a high-impact professional/academic deliverable. I've designed a robust, realistic 6-hour plan split across two days to ensure you deliver high-quality work without burning out or rushing at the last minute."
+        },
+        {
+          "id": "DL2",
+          "agent": "Planner",
+          "action": "Workload Distribution",
+          "reasoning": "Split the workload into a 2.5-hour session today and a 3.5-hour session tomorrow, staying well within your 4-hour daily limit while giving you plenty of breathing room before the 18:00 deadline."
+        },
+        {
+          "id": "DL3",
+          "agent": "Priority",
+          "action": "Dependency Mapping",
+          "reasoning": "Ensured that the core findings are written only after the intro/methodology are set, and placed the executive summary near the end so it accurately reflects the completed report."
+        },
+        {
+          "id": "DL4",
+          "agent": "Risk",
+          "action": "Shadow Timeline Calculation",
+          "reasoning": "Calculated a 6-hour expected timeline with a 9-hour worst-case buffer to protect you against unexpected formatting or data analysis delays."
+        }
+      ],
+      "notifications": [
+        {
+          "id": "N1",
+          "title": "Let's get this started!",
+          "content": "Hey friend! We have a high-impact project report due tomorrow. Let's tackle the outline and intro today so you can sleep easy tonight knowing the foundation is laid. You've got this!",
+          "type": "info"
+        },
+        {
+          "id": "N2",
+          "title": "Morning focus session",
+          "content": "Good morning! Today we tackle the core findings. This is the most important part of the report. Take a deep breath, grab a warm drink, and focus on one section at a time. We are on track!",
+          "type": "warning"
+        },
+        {
+          "id": "N3",
+          "title": "Almost at the finish line!",
+          "content": "Outstanding job! The heavy lifting is done. Now, let's spend a quick 45 minutes polishing the formatting and proofreading. You are about to deliver an amazing report!",
+          "type": "success"
+        }
+      ],
+      "priorityScore": 0
+    },
+    {
+      "id": "2jtu2h7js",
+      "userId": "f6Cg3NkHxJT9WzEBjxDBpahE9ia2",
+      "goal": ".",
+      "deadline": "2026-06-28T18:00:00.000Z",
+      "title": "Pitch Deck & Financials",
+      "priority": "medium",
+      "estimatedHours": 10,
+      "dailyCapacity": 4,
+      "tags": [
+        "business",
+        "deck"
+      ],
+      "createdAt": "2026-06-27T07:09:54.154Z",
+      "status": "expired",
+      "confidenceScore": 39,
+      "shadowTimeline": {
+        "bestCaseHours": 7,
+        "expectedCaseHours": 10,
+        "worstCaseHours": 14
+      },
+      "milestones": [
+        {
+          "id": "milestone_01_financials",
+          "name": "Financial Foundation",
+          "description": "Complete the financial data gathering and forecasting model.",
+          "deadline": "By Saturday 12:00 PM"
+        },
+        {
+          "id": "milestone_02_draft",
+          "name": "Pitch Deck Draft",
+          "description": "Outline the narrative and draft all slide content and visuals.",
+          "deadline": "By Saturday 9:30 PM"
+        },
+        {
+          "id": "milestone_03_final",
+          "name": "Final Delivery",
+          "description": "Polish the deck and complete a full run-through of the pitch.",
+          "deadline": "By Sunday 10:30 AM"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "task_01_gather_metrics",
+          "name": "Gather Financial Data & Historical Metrics",
+          "description": "Collect all historical revenue, expenses, and growth metrics needed for the model.",
+          "durationMinutes": 120,
+          "priority": "high",
+          "order": 0,
+          "dependencies": [],
+          "reasoning": "Gathering metrics is scheduled first because the financial model and deck narrative depend entirely on accurate historical data.",
+          "scheduledTime": "Saturday, June 27, 2026, 8:00 AM - 10:00 AM",
+          "milestoneId": "milestone_01_financials",
+          "status": "completed",
+          "completedAt": "2026-06-27T18:25:50.829Z"
+        },
+        {
+          "id": "task_02_financial_model",
+          "name": "Build Financial Forecast Model",
+          "description": "Create a 3-year financial projection model including revenue streams and cash flow.",
+          "durationMinutes": 120,
+          "priority": "high",
+          "order": 1,
+          "dependencies": [
+            "task_01_gather_metrics"
+          ],
+          "reasoning": "The financial model must be built immediately after gathering metrics to ensure the numbers are locked in before drafting the deck.",
+          "scheduledTime": "Saturday, June 27, 2026, 10:00 AM - 12:00 PM",
+          "milestoneId": "milestone_01_financials",
+          "status": "todo"
+        },
+        {
+          "id": "task_03_deck_outline",
+          "name": "Outline Pitch Deck Structure & Narrative",
+          "description": "Draft the slide-by-slide outline and core narrative arc of the pitch.",
+          "durationMinutes": 90,
+          "priority": "medium",
+          "order": 2,
+          "dependencies": [
+            "task_02_financial_model"
+          ],
+          "reasoning": "The outline is scheduled for the evening session to allow a mental break after heavy financial modeling, focusing on storytelling.",
+          "scheduledTime": "Saturday, June 27, 2026, 6:00 PM - 7:30 PM",
+          "milestoneId": "milestone_02_draft",
+          "status": "todo"
+        },
+        {
+          "id": "task_04_slide_draft",
+          "name": "Draft Slide Content & Visuals",
+          "description": "Populate the slides with text, charts from the financial model, and visual elements.",
+          "durationMinutes": 120,
+          "priority": "high",
+          "order": 3,
+          "dependencies": [
+            "task_03_deck_outline"
+          ],
+          "reasoning": "Drafting slides is scheduled immediately after the outline to maintain creative momentum during the evening session.",
+          "scheduledTime": "Saturday, June 27, 2026, 7:30 PM - 9:30 PM",
+          "milestoneId": "milestone_02_draft",
+          "status": "todo"
+        },
+        {
+          "id": "task_05_polish_deck",
+          "name": "Review, Polish, and Format Deck",
+          "description": "Fine-tune slide layouts, fix formatting inconsistencies, and proofread all copy.",
+          "durationMinutes": 90,
+          "priority": "medium",
+          "order": 4,
+          "dependencies": [
+            "task_04_slide_draft"
+          ],
+          "reasoning": "Polishing is scheduled for Sunday morning with fresh eyes to catch visual errors and refine the messaging.",
+          "scheduledTime": "Sunday, June 28, 2026, 8:00 AM - 9:30 AM",
+          "milestoneId": "milestone_03_final",
+          "status": "todo"
+        },
+        {
+          "id": "task_06_pitch_prep",
+          "name": "Final Pitch Run-through & Q&A Prep",
+          "description": "Practice delivering the pitch aloud and prepare answers for potential investor questions.",
+          "durationMinutes": 60,
+          "priority": "high",
+          "order": 5,
+          "dependencies": [
+            "task_05_polish_deck"
+          ],
+          "reasoning": "The final run-through is scheduled last to build confidence and ensure smooth delivery well ahead of the 6:00 PM deadline.",
+          "scheduledTime": "Sunday, June 28, 2026, 9:30 AM - 10:30 AM",
+          "milestoneId": "milestone_03_final",
+          "status": "todo"
+        }
+      ],
+      "failurePrediction": {
+        "probability": 56,
+        "successProbability": 44,
+        "bottleneck": "Build Financial Forecast Model",
+        "reason": "Urgency strain is 206% against available capacity. Other active sibling backlog requires 0.0 hours.",
+        "suggestedFix": "Workload is dense. Restructure \"Pitch Deck & Financials\" until high priority sibling backlog of 0.0 hours is cleared."
+      },
+      "decisionLog": [
+        {
+          "id": "decision_01",
+          "agent": "Planner",
+          "action": "Deconstructed Goal into 6 Tasks",
+          "reasoning": "Split the pitch deck and financials into sequential steps to ensure a logical flow from raw data to a polished presentation."
+        },
+        {
+          "id": "decision_02",
+          "agent": "Priority",
+          "action": "Scheduled Financials First",
+          "reasoning": "Placed financial modeling on Saturday morning so that the narrative and slide content are built on verified, accurate numbers."
+        },
+        {
+          "id": "decision_03",
+          "agent": "Risk",
+          "action": "Identified Capacity Overload",
+          "reasoning": "Flagged that 10 hours of work exceeds the 8-hour limit of the user's standard 4h/day constraint, requiring an overtime recommendation."
+        },
+        {
+          "id": "decision_04",
+          "agent": "Replanner",
+          "action": "Created Overtime Schedule",
+          "reasoning": "Scheduled 7.5 hours on Saturday by utilizing both morning and evening preferred windows to ensure the draft is completed before Sunday."
+        },
+        {
+          "id": "decision_05",
+          "agent": "Coach",
+          "action": "Tailored High-Impact Notifications",
+          "reasoning": "Designed notifications to motivate the user during their preferred morning and evening working hours, emphasizing the value of early completion."
+        }
+      ],
+      "notifications": [
+        {
+          "id": "notif_01",
+          "title": "Morning Sprint: Financials First",
+          "content": "Start Saturday morning by gathering metrics. Completing this early unlocks the entire deck narrative and boosts success chance by 25%.",
+          "type": "info"
+        },
+        {
+          "id": "notif_02",
+          "title": "Capacity Warning: Overtime Needed",
+          "content": "To hit the 10-hour requirement within the deadline, you'll need to work 7.5 hours today. Push through this evening to stay on track!",
+          "type": "warning"
+        },
+        {
+          "id": "notif_03",
+          "title": "Final Polish & Run-through",
+          "content": "Sunday morning is for refining and practicing. Keep slides clean and focus on the narrative to deliver a high-impact pitch.",
+          "type": "success"
+        }
+      ],
+      "priorityScore": 0
+    },
+    {
+      "id": "qnb3s71ob",
+      "userId": "f6Cg3NkHxJT9WzEBjxDBpahE9ia2",
+      "goal": "Build a Project Report",
+      "deadline": "2026-06-29T18:00:00.000Z",
+      "title": "Build a Project Report",
+      "priority": "medium",
+      "estimatedHours": 4,
+      "dailyCapacity": 4,
+      "tags": [],
+      "createdAt": "2026-06-28T15:38:11.573Z",
+      "status": "completed",
+      "confidenceScore": 95,
+      "shadowTimeline": {
+        "bestCaseHours": 3,
+        "expectedCaseHours": 4,
+        "worstCaseHours": 5
+      },
+      "milestones": [
+        {
+          "id": "M1",
+          "name": "Project Report Completion",
+          "description": "The final project report is complete and ready for submission.",
+          "deadline": "By 2026-06-29T18:00:00Z"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "T1",
+          "name": "Outline Report Structure",
+          "description": "Create a clear outline for the report, including sections like Introduction, Methodology, Results, Discussion, and Conclusion.",
+          "durationMinutes": 23,
+          "priority": "high",
+          "order": 0,
+          "dependencies": [],
+          "reasoning": "This is the foundational step. A good outline ensures a logical flow and prevents rework, making the entire process stress-free. It's prioritized to get a clear direction right away.",
+          "scheduledTime": "09:00 AM",
+          "milestoneId": "M1",
+          "status": "completed",
+          "completedAt": "2026-06-29T13:20:55.405Z"
+        },
+        {
+          "id": "T5",
+          "name": "Format and Finalize Report",
+          "description": "Apply proper formatting, add a title page, table of contents, references, and perform a final proofread before saving the final version.",
+          "durationMinutes": 19,
+          "priority": "high",
+          "order": 1,
+          "dependencies": [
+            "T4"
+          ],
+          "reasoning": "The final touches make a huge difference in presentation. This is a high priority to ensure the report looks professional and meets any submission guidelines, securing a strong finish.",
+          "scheduledTime": "09:00 AM",
+          "milestoneId": "M1",
+          "status": "completed",
+          "completedAt": "2026-06-29T14:18:37.696Z"
+        },
+        {
+          "id": "T2",
+          "name": "Gather Data and Information",
+          "description": "Collect all necessary data, research, and supporting information required for each section of the report.",
+          "durationMinutes": 34,
+          "priority": "high",
+          "order": 2,
+          "dependencies": [
+            "T1"
+          ],
+          "reasoning": "With the outline in hand, gathering specific data becomes much more efficient. This is a high priority to ensure all content is available before drafting begins, preventing interruptions.",
+          "scheduledTime": "10:00 AM",
+          "milestoneId": "M1",
+          "status": "completed",
+          "completedAt": "2026-06-29T13:23:52.053Z"
+        },
+        {
+          "id": "T3",
+          "name": "Draft Key Sections",
+          "description": "Write the main content for the introduction, methodology, results, discussion, and conclusion based on the gathered information.",
+          "durationMinutes": 56,
+          "priority": "high",
+          "order": 3,
+          "dependencies": [
+            "T2"
+          ],
+          "reasoning": "This is the core writing phase. It's scheduled to follow data gathering, allowing for focused content creation. It's a high priority to get the bulk of the report done well in advance of the deadline.",
+          "scheduledTime": "11:00 AM",
+          "milestoneId": "M1",
+          "status": "completed",
+          "completedAt": "2026-06-29T13:28:42.310Z"
+        },
+        {
+          "id": "T4",
+          "name": "Review and Refine Content",
+          "description": "Read through the drafted report, checking for clarity, coherence, accuracy, and completeness. Make necessary revisions.",
+          "durationMinutes": 34,
+          "priority": "high",
+          "order": 4,
+          "dependencies": [
+            "T3"
+          ],
+          "reasoning": "A fresh pair of eyes (even your own after a break!) is crucial for catching errors and improving readability. This is a high priority to ensure the report is polished and professional.",
+          "scheduledTime": "12:00 PM",
+          "milestoneId": "M1",
+          "status": "completed",
+          "completedAt": "2026-06-29T13:36:38.838Z"
+        }
+      ],
+      "failurePrediction": {
+        "probability": 5,
+        "successProbability": 95,
+        "bottleneck": "Format and Finalize Report",
+        "reason": "Urgency strain is 44% against available capacity. Other active sibling backlog requires 4.0 hours.",
+        "suggestedFix": "Workload is dense. Restructure \"Build a Project Report\" until high priority sibling backlog of 4.0 hours is cleared."
+      },
+      "decisionLog": [
+        {
+          "id": "DL1",
+          "agent": "Orchestrator",
+          "action": "Evaluate Mission Impact",
+          "reasoning": "The mission 'Build a Project Report' with a 'medium' priority and a deadline of tomorrow is a significant but manageable task. It has a real-world impact on academic or professional standing, so it requires a structured, yet stress-free plan. It's not a low-stakes 'fun' activity, but also not a high-stakes 'exam' that needs extreme pressure. My goal is to create a plan that ensures high quality without overwhelming the user, leveraging their available time effectively."
+        },
+        {
+          "id": "DL2",
+          "agent": "Planner",
+          "action": "Breakdown Goal and Estimate Hours",
+          "reasoning": "I've broken down 'Build a Project Report' into 5 sequential, logical subtasks. Given the 'medium' priority and the need for a thorough but efficient approach, I estimated an 'expectedCaseHours' of 4 hours. This allows for focused work without feeling rushed, ensuring a quality report. The sum of task durations (220 minutes = 3 hours 40 minutes) aligns well with this estimate, providing a slight buffer."
+        },
+        {
+          "id": "DL3",
+          "agent": "Priority",
+          "action": "Assign Priorities and Schedule Tasks",
+          "reasoning": "All tasks are critical for completing the report, so they are assigned 'high' priority. The tasks are ordered sequentially, as each step builds upon the previous one (e.g., you need an outline before gathering data). I've scheduled tasks to utilize the user's preferred working times (afternoon/evening today, morning tomorrow) and spread the workload across two days, well within the 4-hour daily limit, to avoid burnout and ensure a relaxed pace before the deadline."
+        },
+        {
+          "id": "DL4",
+          "agent": "Risk",
+          "action": "Assess Risks and Define Shadow Timeline",
+          "reasoning": "I've set the best case at 3 hours, expected at 4 hours, and worst case at 5 hours. This range accounts for typical variations in report writing. The success probability is high (95%) because the plan is realistic and provides ample time before the deadline. The main bottleneck identified is potential delays in data gathering or extensive revisions, which is common in report writing. The suggested fix focuses on flexibility and prioritizing impact to keep things moving smoothly."
+        },
+        {
+          "id": "DL5",
+          "agent": "Replanner",
+          "action": "Devise Recovery Triggers",
+          "reasoning": "To keep things stress-free, if any task takes significantly longer than planned (e.g., 50% over its duration), it's a trigger to re-evaluate. Critical tasks (all of them for a report) cannot be deferred. If a task runs over, the immediate next step is to briefly assess if the remaining tasks can be slightly condensed or if a short, focused extra session is needed. The goal is to adapt without panic, always keeping the deadline in sight."
+        },
+        {
+          "id": "DL6",
+          "agent": "Coach",
+          "action": "Generate Personalized Notifications",
+          "reasoning": "I've crafted three friendly, encouraging notifications. They focus on providing actionable advice, explaining the 'why' behind each step's importance, and offering a boost of confidence. The tone is supportive, acknowledging the real-world importance of the report while ensuring the user feels empowered and not overwhelmed."
+        }
+      ],
+      "notifications": [
+        {
+          "id": "N1",
+          "title": "Kickstart Your Report!",
+          "content": "Hey friend! Let's get this report rolling. Starting with the 'Outline Report Structure' (Task 1) is like drawing a map before a journey – it makes everything so much clearer and boosts your success chance by 15%! You've got this, and I'm here to help every step of the way.",
+          "type": "tip"
+        },
+        {
+          "id": "N2",
+          "title": "Time to Draft!",
+          "content": "You're doing great! Now that your data is gathered, it's time for 'Draft Key Sections' (Task 3). This is where your hard work really comes to life! Focusing on getting your thoughts down now significantly increases your success chance by 25% by giving you plenty of time for review. Remember, a first draft doesn't have to be perfect, just complete!",
+          "type": "info"
+        },
+        {
+          "id": "N3",
+          "title": "Almost There! Polish & Shine!",
+          "content": "Wow, look at you go! You're in the home stretch with 'Review and Refine Content' (Task 4) and 'Format and Finalize Report' (Task 5). Taking this time to polish your work is super important – it can boost your report's quality and your overall success chance by a whopping 30%! You've put in the effort, now let's make it shine. I'm so proud of your dedication!",
+          "type": "success"
+        }
+      ],
+      "priorityScore": 0
+    },
+    {
+      "id": "pg6g36q06",
+      "userId": "f6Cg3NkHxJT9WzEBjxDBpahE9ia2",
+      "goal": "Draft methodology, gather empirical code metrics, clean citations, and final review within 48 hours.",
+      "deadline": "2026-06-28T18:00:00.000Z",
+      "title": "Submit AI Master Thesis",
+      "priority": "high",
+      "estimatedHours": 15,
+      "dailyCapacity": 4,
+      "tags": [
+        "academic",
+        "writing",
+        "research"
+      ],
+      "createdAt": "2026-06-23T18:17:19.823Z",
+      "status": "completed",
+      "confidenceScore": 95,
+      "shadowTimeline": {
+        "bestCaseHours": 5,
+        "expectedCaseHours": 6,
+        "worstCaseHours": 8
+      },
+      "milestones": [
+        {
+          "id": "milestone_1",
+          "name": "Phase I: Scoping & Setup",
+          "description": "Define tactical bounds, assemble materials, and initiate core environment setup.",
+          "deadline": "First 20% of timeline"
+        },
+        {
+          "id": "milestone_2",
+          "name": "Phase II: Direct Active Sprint",
+          "description": "Major production block focused on implementing core complexity objectives.",
+          "deadline": "Middle 60% of timeline"
+        },
+        {
+          "id": "milestone_3",
+          "name": "Phase III: Polishing & Validation",
+          "description": "Troubleshoot edge cases, polish overall aesthetics, and verify final quality checklists.",
+          "deadline": "Final 20% of timeline"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "task_1",
+          "milestoneId": "milestone_1",
+          "name": "Specify user stories, design database structures, and identify API endpoints",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 45,
+          "priority": "high",
+          "order": 0,
+          "dependencies": [],
+          "reasoning": "Creating firm boundaries upfront helps avoid distraction and scope creep later.",
+          "scheduledTime": "09:00 - 09:45",
+          "status": "completed",
+          "completedAt": "2026-06-27T17:58:16.101Z"
+        },
+        {
+          "id": "task_2",
+          "milestoneId": "milestone_2",
+          "name": "Bootstrap database schema migrations and secure local environment configuration",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 45,
+          "priority": "medium",
+          "order": 1,
+          "dependencies": [
+            "task_1"
+          ],
+          "reasoning": "Aligned sequentially to preserve flow and handle unexpected real-world bottlenecks.",
+          "scheduledTime": "10:00 - 11:15",
+          "status": "completed",
+          "completedAt": "2026-06-27T17:58:17.102Z"
+        },
+        {
+          "id": "task_3",
+          "milestoneId": "milestone_2",
+          "name": "Implement core routing backend architecture and service orchestrators",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 120,
+          "priority": "high",
+          "order": 2,
+          "dependencies": [
+            "task_2"
+          ],
+          "reasoning": "Dedicated high-duration segment allocated to solve the core architectural bottlenecks.",
+          "scheduledTime": "11:30 - 13:30",
+          "status": "completed",
+          "completedAt": "2026-06-27T17:58:16.637Z"
+        },
+        {
+          "id": "task_4",
+          "milestoneId": "milestone_2",
+          "name": "Design clean modular user interface screens with polished responsive css styles",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 60,
+          "priority": "medium",
+          "order": 3,
+          "dependencies": [
+            "task_3"
+          ],
+          "reasoning": "Aligned sequentially to preserve flow and handle unexpected real-world bottlenecks.",
+          "scheduledTime": "14:30 - 15:30",
+          "status": "completed",
+          "completedAt": "2026-06-27T17:58:17.542Z"
+        },
+        {
+          "id": "task_5",
+          "milestoneId": "milestone_2",
+          "name": "Debug cross-endpoint logic gates, error handlers, and unhandled exceptions",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 45,
+          "priority": "medium",
+          "order": 4,
+          "dependencies": [
+            "task_4"
+          ],
+          "reasoning": "Aligned sequentially to preserve flow and handle unexpected real-world bottlenecks.",
+          "scheduledTime": "16:00 - 16:45",
+          "status": "completed",
+          "completedAt": "2026-06-27T17:58:17.925Z"
+        },
+        {
+          "id": "task_6",
+          "milestoneId": "milestone_3",
+          "name": "Deploy main production bundle to hosting server and execute live validation tests",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 45,
+          "priority": "low",
+          "order": 5,
+          "dependencies": [
+            "task_5"
+          ],
+          "reasoning": "Aligned sequentially to preserve flow and handle unexpected real-world bottlenecks.",
+          "scheduledTime": "17:00 - 17:30",
+          "status": "completed",
+          "completedAt": "2026-06-27T17:58:18.301Z"
+        }
+      ],
+      "failurePrediction": {
+        "probability": 5,
+        "successProbability": 95,
+        "bottleneck": "Deploy main production bundle to hosting server and execute live validation tests",
+        "reason": "Urgency strain is 19% against available capacity. Other active sibling backlog requires 17.8 hours.",
+        "suggestedFix": "Commit completely to: \"Deploy main production bundle to hosting server and execute live validation tests\" to prevent deadline cascade."
+      },
+      "decisionLog": [
+        {
+          "id": "dec_initial_1782238642299",
+          "agent": "Orchestrating Planner",
+          "action": "Local Strategic Framework Deployed",
+          "reasoning": "The co-pilot safely established a fully-calibrated local blueprint, resolving backend service latency gracefully."
+        }
+      ],
+      "notifications": [
+        {
+          "id": "notif_1_1782238642299",
+          "title": "Standby Model Engaged",
+          "content": "Your life-saver agentic co-pilot launched a high-performance local blueprint optimized for your target goal.",
+          "type": "success"
+        },
+        {
+          "id": "notif_2_1782238642299",
+          "title": "Buffer Calibrated",
+          "content": "Workload of expected Case hours aligned and validated. Zero sign-in blocks discovered.",
+          "type": "info"
+        }
+      ],
+      "priorityScore": 0
+    },
+    {
+      "id": "dqflxipb2",
+      "userId": "f6Cg3NkHxJT9WzEBjxDBpahE9ia2",
+      "goal": "Build a Project Report",
+      "deadline": "2026-07-02T18:00:00.000Z",
+      "title": "Build a Project Report",
+      "priority": "medium",
+      "estimatedHours": 13,
+      "dailyCapacity": 4,
+      "tags": [],
+      "createdAt": "2026-06-28T14:21:58.188Z",
+      "status": "completed",
+      "confidenceScore": 95,
+      "shadowTimeline": {
+        "bestCaseHours": 10,
+        "expectedCaseHours": 13,
+        "worstCaseHours": 20
+      },
+      "milestones": [
+        {
+          "id": "milestone-1",
+          "name": "Data & Outline Ready",
+          "description": "All necessary data collected and the report structure outlined.",
+          "deadline": "By June 28th, 19:00Z"
+        },
+        {
+          "id": "milestone-2",
+          "name": "First Draft Complete",
+          "description": "The main content of the report has been drafted.",
+          "deadline": "By June 29th, 13:00Z"
+        },
+        {
+          "id": "milestone-3",
+          "name": "Report Finalized",
+          "description": "The report is fully formatted, reviewed, and ready for submission.",
+          "deadline": "By July 1st, 10:30Z"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "task-1",
+          "name": "Define Report Scope & Gather Requirements",
+          "description": "Understand the report's purpose, audience, key metrics, and content requirements.",
+          "durationMinutes": 60,
+          "priority": "high",
+          "order": 0,
+          "dependencies": [],
+          "reasoning": "This is the foundational task, critical for all subsequent steps. Scheduled first to ensure clear direction.",
+          "scheduledTime": "June 28th, 15:00Z (afternoon)",
+          "milestoneId": "milestone-1",
+          "status": "completed",
+          "completedAt": "2026-06-28T14:24:40.010Z"
+        },
+        {
+          "id": "task-2",
+          "name": "Collect & Organize Data",
+          "description": "Gather all necessary data, figures, and information required for the report.",
+          "durationMinutes": 120,
+          "priority": "high",
+          "order": 1,
+          "dependencies": [
+            "task-1"
+          ],
+          "reasoning": "Essential data collection must follow scope definition to provide content for the report.",
+          "scheduledTime": "June 28th, 16:00Z (afternoon/evening)",
+          "milestoneId": "milestone-1",
+          "status": "completed",
+          "completedAt": "2026-06-28T14:36:37.110Z"
+        },
+        {
+          "id": "task-3",
+          "name": "Outline Report Structure",
+          "description": "Create a detailed outline including sections, subsections, and key points to be covered.",
+          "durationMinutes": 60,
+          "priority": "high",
+          "order": 2,
+          "dependencies": [
+            "task-1"
+          ],
+          "reasoning": "A clear outline is crucial before drafting to ensure logical flow and cover all requirements.",
+          "scheduledTime": "June 28th, 18:00Z (evening)",
+          "milestoneId": "milestone-1",
+          "status": "completed",
+          "completedAt": "2026-06-28T14:36:38.773Z"
+        },
+        {
+          "id": "task-4",
+          "name": "Draft Report Content",
+          "description": "Write the main body of the report, including analysis, findings, and conclusions.",
+          "durationMinutes": 240,
+          "priority": "high",
+          "order": 3,
+          "dependencies": [
+            "task-2",
+            "task-3"
+          ],
+          "reasoning": "This is the core writing task, requiring significant dedicated time. Scheduled early on the next day to maximize focus.",
+          "scheduledTime": "June 29th, 09:00Z (morning)",
+          "milestoneId": "milestone-2",
+          "status": "completed",
+          "completedAt": "2026-06-28T14:36:40.109Z"
+        },
+        {
+          "id": "task-5",
+          "name": "Create Visuals & Charts",
+          "description": "Design and integrate relevant graphs, charts, and images to support the report's content.",
+          "durationMinutes": 120,
+          "priority": "medium",
+          "order": 4,
+          "dependencies": [
+            "task-4"
+          ],
+          "reasoning": "Visuals enhance the report but can be done after the initial draft. Scheduled before review to allow for integration.",
+          "scheduledTime": "June 30th, 09:00Z (morning)",
+          "milestoneId": "milestone-3",
+          "status": "completed",
+          "completedAt": "2026-06-28T14:36:45.926Z"
+        },
+        {
+          "id": "task-6",
+          "name": "Review & Edit Content",
+          "description": "Proofread the entire report for grammar, clarity, consistency, accuracy, and completeness.",
+          "durationMinutes": 90,
+          "priority": "high",
+          "order": 5,
+          "dependencies": [
+            "task-4"
+          ],
+          "reasoning": "Critical for quality assurance. Scheduled after drafting and initial visuals are in place to review the complete picture.",
+          "scheduledTime": "June 30th, 11:00Z (morning/afternoon)",
+          "milestoneId": "milestone-3",
+          "status": "completed",
+          "completedAt": "2026-06-28T14:36:43.893Z"
+        },
+        {
+          "id": "task-7",
+          "name": "Format & Finalize Report",
+          "description": "Apply final styling, ensure proper formatting, add cover page, table of contents, and prepare for submission.",
+          "durationMinutes": 90,
+          "priority": "high",
+          "order": 6,
+          "dependencies": [
+            "task-5",
+            "task-6"
+          ],
+          "reasoning": "Final polish and formatting are essential for a professional delivery. Scheduled as the last step.",
+          "scheduledTime": "July 1st, 09:00Z (morning)",
+          "milestoneId": "milestone-3",
+          "status": "completed",
+          "completedAt": "2026-06-28T14:36:44.837Z"
+        }
+      ],
+      "failurePrediction": {
+        "probability": 5,
+        "successProbability": 95,
+        "bottleneck": "Create Visuals & Charts",
+        "reason": "Urgency strain is 12% against available capacity. Other active sibling backlog requires 10.8 hours.",
+        "suggestedFix": "Workload is dense. Restructure \"Build a Project Report\" until high priority sibling backlog of 10.8 hours is cleared."
+      },
+      "decisionLog": [
+        {
+          "id": "log-1",
+          "agent": "Planner",
+          "action": "Decomposed goal into subtasks and milestones, estimated effort.",
+          "reasoning": "The goal 'Build a Project Report' was broken into 7 sequential subtasks covering the entire report creation process. Three logical milestones were defined to track progress. The total estimated effort of 13 hours was calculated based on the complexity and scope of a typical project report, ensuring alignment with subtask durations."
+        },
+        {
+          "id": "log-2",
+          "agent": "Priority",
+          "action": "Assigned priorities and scheduled tasks based on dependencies and daily limits.",
+          "reasoning": "Tasks were prioritized based on their criticality to the overall report completion, with foundational and core writing tasks receiving 'high' priority. Dependencies were strictly followed. The schedule was designed to fit within the user's maximum 4 hours of work per day, leveraging preferred working times (morning, afternoon, evening) and ensuring completion well before the final deadline, leaving a significant buffer."
+        },
+        {
+          "id": "log-3",
+          "agent": "Risk",
+          "action": "Calculated timeline scenarios, assessed failure probability, identified bottleneck and fix.",
+          "reasoning": "Best, Expected, and Worst Case hours were calculated to provide a comprehensive view of potential timelines. With 20 hours of available work time against an expected 13 hours and a worst-case 20 hours, a 5% failure probability was assessed due to the tight fit in the worst-case scenario. 'Draft Report Content' was identified as the primary bottleneck due to its length and creative nature, and a structural fix was proposed to mitigate this risk."
+        },
+        {
+          "id": "log-4",
+          "agent": "Replanner",
+          "action": "Defined recovery triggers and scheduling adjustments.",
+          "reasoning": "Three specific recovery triggers were devised for critical early tasks (T1, T2), the main drafting task (T4), and the review phase (T6). For each trigger, clear scheduling adjustments and indicators (critical vs. deferrable) were specified to guide the user in case of delays, focusing on scope management, task prioritization, and leveraging buffer time."
+        },
+        {
+          "id": "log-5",
+          "agent": "Coach",
+          "action": "Generated personalized notifications.",
+          "reasoning": "Three hyper-personalized notifications were created to guide the user. The first encourages immediate action on foundational tasks, the second emphasizes focus on the core drafting task, and the third highlights the importance of utilizing buffer time effectively. Each notification clearly states WHAT to do, WHY, and its impact on success chance, aligning with the overall plan and risk mitigation strategies."
+        }
+      ],
+      "notifications": [
+        {
+          "id": "notification-1",
+          "title": "Kickstart Your Report: Scope & Data First!",
+          "content": "Start 'Define Report Scope & Gather Requirements' (T1) and 'Collect & Organize Data' (T2) right away this afternoon. Getting these foundational tasks done efficiently by June 28th, 18:00Z ensures you have a solid base, boosting your overall success chance by 15% and preventing early delays.",
+          "type": "info"
+        },
+        {
+          "id": "notification-2",
+          "title": "Focus on Drafting: Your Core Progress",
+          "content": "Your most significant task, 'Draft Report Content' (T4), is scheduled for tomorrow morning. Dedicate your full 4 hours to this. Completing it by June 29th, 13:00Z is crucial for staying on track and increases your chance of hitting all milestones by 20%.",
+          "type": "tip"
+        },
+        {
+          "id": "notification-3",
+          "title": "Buffer Time is Your Friend: Don't Waste It!",
+          "content": "You're projected to finish all tasks by July 1st, 10:30Z, leaving over 24 hours before the deadline. Use this buffer wisely for unexpected issues, deeper review, or refining visuals. This proactive approach significantly reduces stress and secures your 95% success probability.",
+          "type": "success"
+        }
+      ],
+      "priorityScore": 0
+    },
+    {
+      "id": "ufteqj80d",
+      "userId": "f6Cg3NkHxJT9WzEBjxDBpahE9ia2",
+      "goal": "Submit Assignment",
+      "deadline": "2026-06-29T18:00:00.000Z",
+      "title": "Submit Assignment",
+      "priority": "medium",
+      "estimatedHours": 2,
+      "dailyCapacity": 4,
+      "tags": [],
+      "createdAt": "2026-06-28T15:37:12.187Z",
+      "status": "completed",
+      "confidenceScore": 95,
+      "shadowTimeline": {
+        "bestCaseHours": 2,
+        "expectedCaseHours": 2,
+        "worstCaseHours": 4
+      },
+      "milestones": [
+        {
+          "id": "M1",
+          "name": "Final Review Complete",
+          "description": "All content, grammar, and requirements have been thoroughly checked.",
+          "deadline": "By 2026-06-29T12:00:00Z"
+        },
+        {
+          "id": "M2",
+          "name": "Assignment Ready for Submission",
+          "description": "Formatting, citations, and file preparation are complete.",
+          "deadline": "By 2026-06-29T15:00:00Z"
+        },
+        {
+          "id": "M3",
+          "name": "Assignment Successfully Submitted",
+          "description": "The assignment has been uploaded and confirmed on the platform.",
+          "deadline": "By 2026-06-29T17:00:00Z"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "T1",
+          "name": "Final Review of Content",
+          "description": "Carefully read through your assignment one last time. Check for grammar, spelling, clarity, and ensure all assignment requirements and rubric points have been met.",
+          "durationMinutes": 45,
+          "priority": "high",
+          "order": 0,
+          "dependencies": [],
+          "reasoning": "This is the most critical step to ensure the quality of your submission. Doing it first allows ample time to catch any last-minute errors or improvements. It's scheduled for tonight to give you a fresh perspective tomorrow.",
+          "scheduledTime": "Tonight, 2026-06-28, around 7 PM",
+          "milestoneId": "M1",
+          "status": "completed",
+          "completedAt": "2026-06-29T13:15:22.037Z"
+        },
+        {
+          "id": "T2",
+          "name": "Check Formatting and Citations",
+          "description": "Verify that your assignment adheres to all specified formatting guidelines (e.g., font, spacing, margins) and that all citations and references are correctly formatted.",
+          "durationMinutes": 34,
+          "priority": "high",
+          "order": 1,
+          "dependencies": [
+            "T1"
+          ],
+          "reasoning": "After the content review, ensuring proper formatting and citations is crucial for a professional submission. This task depends on the content being finalized.",
+          "scheduledTime": "Tomorrow morning, 2026-06-29, around 9 AM",
+          "milestoneId": "M2",
+          "status": "completed",
+          "completedAt": "2026-06-29T13:15:35.261Z"
+        },
+        {
+          "id": "T3",
+          "name": "Prepare for Submission",
+          "description": "Convert your assignment to the required file format (e.g., PDF), check the file size, and ensure it's named correctly. Do a quick final check of the converted document.",
+          "durationMinutes": 15,
+          "priority": "high",
+          "order": 2,
+          "dependencies": [
+            "T2"
+          ],
+          "reasoning": "This task prepares the final file for upload, ensuring no technical hiccups. It must follow the content and formatting checks.",
+          "scheduledTime": "Tomorrow morning, 2026-06-29, around 9:45 AM",
+          "milestoneId": "M2",
+          "status": "completed",
+          "completedAt": "2026-06-29T13:15:53.381Z"
+        },
+        {
+          "id": "T4",
+          "name": "Upload and Confirm Submission",
+          "description": "Navigate to the submission portal, upload your assignment, and carefully follow all steps to confirm the submission. Take a screenshot of the confirmation if possible.",
+          "durationMinutes": 19,
+          "priority": "high",
+          "order": 3,
+          "dependencies": [
+            "T3"
+          ],
+          "reasoning": "The final step! This is critical to ensure your hard work is officially submitted. It's scheduled with plenty of buffer before the deadline to account for any platform issues.",
+          "scheduledTime": "Tomorrow morning, 2026-06-29, around 10:05 AM",
+          "milestoneId": "M3",
+          "status": "completed",
+          "completedAt": "2026-06-29T13:16:02.533Z"
+        }
+      ],
+      "failurePrediction": {
+        "probability": 5,
+        "successProbability": 95,
+        "bottleneck": "Upload and Confirm Submission",
+        "reason": "Urgency strain is 40% against available capacity. Other active sibling backlog requires 13.8 hours.",
+        "suggestedFix": "Workload is dense. Restructure \"Submit Assignment\" until high priority sibling backlog of 13.8 hours is cleared."
+      },
+      "decisionLog": [
+        {
+          "id": "DL1",
+          "agent": "Orchestrator",
+          "action": "Evaluate Mission Impact",
+          "reasoning": "This mission, 'Submit Assignment,' is incredibly important, my friend! It has a HIGH REAL-WORLD IMPACT because your academic success and grades depend on it. We absolutely cannot let this one slip. My plan is designed to be super supportive and stress-free, ensuring you have ample time for a thorough final check and a smooth submission process. We're allocating a realistic 2.5 hours for this, spread out nicely so you don't feel rushed. The goal is to get this done perfectly and confidently, well before the deadline, so you can relax knowing you've done your best!"
+        },
+        {
+          "id": "DL2",
+          "agent": "Planner",
+          "action": "Break down goal into subtasks and estimate effort",
+          "reasoning": "The goal 'Submit Assignment' was broken down into four sequential subtasks: 'Final Review of Content', 'Check Formatting and Citations', 'Prepare for Submission', and 'Upload and Confirm Submission'. An 'expectedCaseHours' of 2.5 hours (150 minutes) was estimated, reflecting the high impact of the mission while assuming the bulk of the assignment writing is complete. Task durations sum up to 150 minutes, aligning with the estimate."
+        },
+        {
+          "id": "DL3",
+          "agent": "Priority",
+          "action": "Assign priorities and dependencies",
+          "reasoning": "All tasks were assigned 'high' priority due to the critical nature of an assignment submission. Dependencies were set sequentially (T1 -> T2 -> T3 -> T4) to ensure a logical flow from review to final submission. Scheduling was designed to utilize today evening and tomorrow morning, providing a significant buffer before the deadline and aligning with user preferences."
+        },
+        {
+          "id": "DL4",
+          "agent": "Risk",
+          "action": "Calculate timeline, predict failure, and suggest fixes",
+          "reasoning": "Calculated best, expected, and worst-case hours (2, 2.5, 4 respectively). Identified a low failure probability (2%) and high success probability (98%) due to ample time. The 'Final Review of Content' was pinpointed as the bottleneck, with the risk of rushing. A fix was suggested to dedicate focused time and use a checklist for this critical step."
+        },
+        {
+          "id": "DL5",
+          "agent": "Replanner",
+          "action": "Devise initial recovery triggers",
+          "reasoning": "Established that all tasks are critical. If 'Final Review of Content' (T1) takes longer than expected, the subsequent tasks would need to be adjusted, potentially shifting them slightly later tomorrow, but still well within the deadline. The plan has enough buffer to absorb minor delays."
+        },
+        {
+          "id": "DL6",
+          "agent": "Coach",
+          "action": "Generate personalized notifications",
+          "reasoning": "Created three supportive and actionable notifications focusing on the importance of the final review, the benefit of an early start, and the confidence in a successful submission, all from a caring friend's perspective."
+        }
+      ],
+      "notifications": [
+        {
+          "id": "N1",
+          "title": "Your Assignment's Final Polish!",
+          "content": "Hey friend! Remember that 'Final Review of Content' (Task 1) tonight? This is your golden opportunity to make sure your assignment shines! Taking this hour to really comb through it will boost your success chance by ensuring no silly mistakes slip through. You've got this!",
+          "type": "tip"
+        },
+        {
+          "id": "N2",
+          "title": "Smooth Sailing to Submission!",
+          "content": "Good morning! Starting your 'Check Formatting and Citations' (Task 2) and 'Prepare for Submission' (Task 3) tasks early today means you'll be way ahead of the game. This proactive step significantly increases your success chance by giving you a huge buffer against any unexpected tech glitches. Let's get it done calmly and confidently!",
+          "type": "info"
+        },
+        {
+          "id": "N3",
+          "title": "Almost There! Confirm Your Success!",
+          "content": "You're doing amazing! As you move to 'Upload and Confirm Submission' (Task 4), take a deep breath and double-check everything. Confirming your submission properly is the final, crucial step to secure your hard work. Doing this carefully ensures a 100% success chance for this mission! I'm so proud of you!",
+          "type": "success"
+        }
+      ],
+      "priorityScore": 0
+    },
+    {
+      "id": "cp1g3fmm5",
+      "userId": "f6Cg3NkHxJT9WzEBjxDBpahE9ia2",
+      "goal": "Build a Project Report",
+      "deadline": "2026-07-06T09:35:29.395Z",
+      "title": "Build a Project Report",
+      "priority": "medium",
+      "estimatedHours": 4,
+      "dailyCapacity": 4,
+      "tags": [],
+      "createdAt": "2026-06-29T09:12:21.373Z",
+      "status": "completed",
+      "confidenceScore": 95,
+      "shadowTimeline": {
+        "bestCaseHours": 3,
+        "expectedCaseHours": 4,
+        "worstCaseHours": 5
+      },
+      "milestones": [
+        {
+          "id": "M1",
+          "name": "Report Outline & Data Ready",
+          "description": "Have a clear structure for your report and all necessary information gathered.",
+          "deadline": "By 2026-06-29T10:45:00Z"
+        },
+        {
+          "id": "M2",
+          "name": "First Draft Complete",
+          "description": "Finish the main body of your project report.",
+          "deadline": "By 2026-06-29T12:15:00Z"
+        },
+        {
+          "id": "M3",
+          "name": "Final Report Ready for Submission",
+          "description": "Complete all editing, formatting, and final checks, ready to submit.",
+          "deadline": "By 2026-06-29T13:15:00Z"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "T1",
+          "name": "Outline Report Structure",
+          "description": "Create a clear outline for your report, including sections like introduction, methodology, results, discussion, and conclusion. This will be your roadmap!",
+          "durationMinutes": 30,
+          "priority": "high",
+          "order": 0,
+          "dependencies": [],
+          "reasoning": "This is the foundational step, like drawing a map before a journey. Getting the structure right early saves a lot of time and ensures a coherent report. It's high priority to set you up for success.",
+          "scheduledTime": "Today, around 09:15 AM",
+          "milestoneId": "M1",
+          "status": "completed",
+          "completedAt": "2026-06-29T14:18:53.544Z"
+        },
+        {
+          "id": "T2",
+          "name": "Gather Information/Data",
+          "description": "Collect all necessary data, notes, research, and any previous work relevant to your report. Make sure everything you need is at your fingertips!",
+          "durationMinutes": 60,
+          "priority": "high",
+          "order": 1,
+          "dependencies": [
+            "T1"
+          ],
+          "reasoning": "Having all your materials organized before you start writing is a huge time-saver and reduces stress. This task is high priority because you can't build without bricks!",
+          "scheduledTime": "Today, around 09:45 AM",
+          "milestoneId": "M1",
+          "status": "completed",
+          "completedAt": "2026-06-29T14:19:25.191Z"
+        },
+        {
+          "id": "T3",
+          "name": "Draft Report Content",
+          "description": "Write the main body of your report, following your outline. Don't worry about perfection yet, just get your thoughts down!",
+          "durationMinutes": 90,
+          "priority": "high",
+          "order": 2,
+          "dependencies": [
+            "T2"
+          ],
+          "reasoning": "This is the core work of the mission. It's given high priority and the largest time block because it requires focused effort. Getting a solid draft done is the biggest hurdle.",
+          "scheduledTime": "Today, around 10:45 AM",
+          "milestoneId": "M2",
+          "status": "completed",
+          "completedAt": "2026-06-29T14:23:23.352Z"
+        },
+        {
+          "id": "T4",
+          "name": "Review and Edit",
+          "description": "Read through your draft for clarity, grammar, spelling, consistency, and completeness. A fresh pair of eyes (even your own after a short break!) can catch a lot.",
+          "durationMinutes": 45,
+          "priority": "medium",
+          "order": 3,
+          "dependencies": [
+            "T3"
+          ],
+          "reasoning": "After drafting, a good review ensures quality. It's medium priority because while important, the core content is already there. We want to polish, not rewrite.",
+          "scheduledTime": "Today, around 12:15 PM",
+          "milestoneId": "M3",
+          "status": "completed",
+          "completedAt": "2026-06-29T14:23:38.655Z"
+        },
+        {
+          "id": "T5",
+          "name": "Final Formatting and Submission",
+          "description": "Apply any required formatting, add a title page, table of contents, and prepare the report for submission. Double-check everything one last time!",
+          "durationMinutes": 15,
+          "priority": "medium",
+          "order": 4,
+          "dependencies": [
+            "T4"
+          ],
+          "reasoning": "The final touches make a big difference in presentation. It's medium priority as it's the last step to ensure your hard work looks professional before the deadline.",
+          "scheduledTime": "Today, around 01:00 PM",
+          "milestoneId": "M3",
+          "status": "completed",
+          "completedAt": "2026-06-29T14:23:56.519Z"
+        }
+      ],
+      "failurePrediction": {
+        "probability": 5,
+        "successProbability": 95,
+        "bottleneck": "Final Formatting and Submission",
+        "reason": "Urgency strain is 1% against available capacity. Other active sibling backlog requires 0.0 hours.",
+        "suggestedFix": "Workload is dense. Restructure \"Build a Project Report\" until high priority sibling backlog of 0.0 hours is cleared."
+      },
+      "decisionLog": [
+        {
+          "id": "DL1",
+          "agent": "Orchestrator",
+          "action": "Evaluate Mission Impact",
+          "reasoning": "The mission 'Build a Project Report' with a 'medium' priority and a deadline today at 6 PM UTC is a significant, but manageable, task. It has a real-world impact on professional or academic standing, requiring a well-structured and clear output. It's not a low-stakes task like organizing a playlist, nor is it as high-stakes as a critical exam. Therefore, the plan needs to be robust enough to ensure quality but also stress-free, allowing ample time for completion without rushing. I've aimed for a realistic 4-hour expected effort, which is well within the user's daily capacity and leaves a generous buffer before the deadline, ensuring a calm and effective workflow."
+        },
+        {
+          "id": "DL2",
+          "agent": "Planner",
+          "action": "Break down goal into subtasks and estimate effort",
+          "reasoning": "I've broken down 'Build a Project Report' into 5 sequential subtasks: Outline, Gather, Draft, Review, and Format. This covers the entire report creation process logically. Based on the 'medium' priority and the need for a quality output, I've estimated an 'expectedCaseHours' of 4 hours. This allows for thorough work without feeling rushed, aligning with the goal of a stress-free plan. The sum of task durations (240 minutes) matches this estimate perfectly."
+        },
+        {
+          "id": "DL3",
+          "agent": "Priority",
+          "action": "Assign priorities and explain scheduling",
+          "reasoning": "Tasks T1 (Outline) and T2 (Gather) are critical foundations, so they are 'high' priority to ensure a solid start. T3 (Draft) is the core work, also 'high' priority, as it's where most of the content is created. T4 (Review) and T5 (Format) are 'medium' priority, as they are essential for quality and presentation, but follow the main content creation. The sequential order ensures a logical flow, preventing rework and keeping the process smooth and stress-free."
+        },
+        {
+          "id": "DL4",
+          "agent": "Risk",
+          "action": "Calculate shadow timeline, failure probability, and identify bottleneck",
+          "reasoning": "I've set the 'expectedCaseHours' at 4 hours, with a 'bestCaseHours' of 3 and 'worstCaseHours' of 5. This range accounts for typical variations in report writing. Given the 4-hour plan and a deadline of 6 PM UTC (with current time around 9 AM UTC), there's ample time, leading to a high success probability (90%) and low failure probability (10%). The 'Draft Report Content' task is identified as the bottleneck because writing often takes the most unpredictable amount of time. The suggested fix focuses on proactive strategies to manage this, ensuring a smooth workflow."
+        },
+        {
+          "id": "DL5",
+          "agent": "Replanner",
+          "action": "Devise initial recovery triggers and adjustments",
+          "reasoning": "To keep things stress-free, I've set recovery triggers for the drafting and information gathering phases, as these are where unexpected delays are most likely. If drafting takes longer, the plan suggests prioritizing key sections. If information is missing, it advises immediate action. This proactive approach ensures that if minor issues arise, they can be handled quickly without derailing the entire schedule, maintaining a calm and controlled environment."
+        },
+        {
+          "id": "DL6",
+          "agent": "Coach",
+          "action": "Generate hyper-personalized notifications",
+          "reasoning": "The notifications are crafted to be warm, supportive, and highly actionable, reflecting the AI Friend persona. They focus on encouraging a good start, managing the core writing task, and ensuring a polished finish. Each notification explains the 'what,' 'why,' and 'impact' to empower the user and boost their confidence, reinforcing the stress-free and caring approach to this important mission."
+        }
+      ],
+      "notifications": [
+        {
+          "id": "N1",
+          "title": "Kickstart Your Report with a Clear Plan!",
+          "content": "Hey friend! Starting with a solid outline (Task 1) and gathering all your info (Task 2) is like setting up your workspace perfectly. It makes the whole writing process so much smoother and less stressful. Doing this well now boosts your success chance by 20% because you'll have a clear roadmap and all your tools ready!",
+          "type": "tip"
+        },
+        {
+          "id": "N2",
+          "title": "Tackle the Heart of Your Report!",
+          "content": "You're doing great! Now it's time for the main event: drafting your report (Task 3). Remember, the goal here is to get your ideas down, not to be perfect. Don't hesitate to use bullet points or rough sentences if it helps you keep the flow going. This is the biggest chunk of work, and focusing on it now will increase your success chance by a huge 50%!",
+          "type": "info"
+        },
+        {
+          "id": "N3",
+          "title": "Polish and Shine for a Perfect Finish!",
+          "content": "Almost there! Giving your report a thorough review (Task 4) and a final polish (Task 5) is super important. It's like adding the finishing touches to a masterpiece! This ensures your hard work truly shines and makes a great impression. Taking this time seriously will boost your success chance by another 20%, ensuring a high-quality submission you can be proud of!",
+          "type": "success"
+        }
+      ],
+      "priorityScore": 0
+    },
+    {
+      "id": "8c3ok9vli",
+      "userId": "f6Cg3NkHxJT9WzEBjxDBpahE9ia2",
+      "goal": "Plan a Trip",
+      "deadline": "2026-07-03T18:00:00.000Z",
+      "title": "Plan a Trip",
+      "priority": "medium",
+      "estimatedHours": 2,
+      "dailyCapacity": 4,
+      "tags": [],
+      "createdAt": "2026-06-30T03:44:47.931Z",
+      "status": "active",
+      "confidenceScore": 70,
+      "shadowTimeline": {
+        "bestCaseHours": 1,
+        "expectedCaseHours": 2,
+        "worstCaseHours": 3
+      },
+      "milestones": [
+        {
+          "id": "m1",
+          "name": "Inspiration & Budget Set",
+          "description": "Decide on the destination vibe, maximum budget, and travel dates.",
+          "deadline": "By July 1st Evening"
+        },
+        {
+          "id": "m2",
+          "name": "Bookings & Itinerary Locked",
+          "description": "Secure lodging, transport, and map out a loose, fun daily itinerary.",
+          "deadline": "By July 2nd Evening"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "t1",
+          "name": "Brainstorm Destinations & Budget",
+          "description": "Pick your top 2 destinations, set a comfortable spending limit, and check general weather conditions.",
+          "durationMinutes": 30,
+          "priority": "medium",
+          "order": 0,
+          "dependencies": [],
+          "reasoning": "Starting with a quick, fun brainstorm keeps the momentum high without causing decision fatigue. We keep it to 30 minutes to avoid overthinking.",
+          "scheduledTime": "July 1st, Morning (10:00 AM - 10:30 AM)",
+          "milestoneId": "m1",
+          "status": "todo"
+        },
+        {
+          "id": "t2",
+          "name": "Select Lodging & Transport Options",
+          "description": "Compare 3 accommodation options and look up flight or drive routes. Pick the most convenient ones.",
+          "durationMinutes": 45,
+          "priority": "high",
+          "order": 1,
+          "dependencies": [
+            "t1"
+          ],
+          "reasoning": "Securing where you sleep and how you get there is the most critical part of any trip. We prioritize this to ensure availability and good rates.",
+          "scheduledTime": "July 1st, Afternoon (2:00 PM - 2:45 PM)",
+          "milestoneId": "m1",
+          "status": "todo"
+        },
+        {
+          "id": "t3",
+          "name": "Finalize Itinerary & Bookings",
+          "description": "Book the selected options and list 3-5 must-see spots or restaurants. Keep the schedule flexible!",
+          "durationMinutes": 45,
+          "priority": "medium",
+          "order": 2,
+          "dependencies": [
+            "t2"
+          ],
+          "reasoning": "The final step is to lock in the bookings and sketch a loose plan. Keeping it flexible ensures you actually relax on your trip.",
+          "scheduledTime": "July 2nd, Evening (6:00 PM - 6:45 PM)",
+          "milestoneId": "m2",
+          "status": "todo"
+        }
+      ],
+      "failurePrediction": {
+        "probability": 28,
+        "successProbability": 72,
+        "bottleneck": "Brainstorm Destinations & Budget",
+        "reason": "Urgency strain is 14% against available capacity. Other active sibling backlog requires 5.0 hours.",
+        "suggestedFix": "Workload is dense. Restructure \"Plan a Trip\" until high priority sibling backlog of 5.0 hours is cleared."
+      },
+      "decisionLog": [
+        {
+          "id": "d1",
+          "agent": "Planner",
+          "action": "Designed a ultra-lightweight 2-hour planning flow",
+          "reasoning": "Since planning a trip is a low real-world impact mission, we want to keep it stress-free, fun, and highly efficient. No need to spend days on it!"
+        },
+        {
+          "id": "d2",
+          "agent": "Priority",
+          "action": "Prioritized lodging and transport over itinerary details",
+          "reasoning": "Logistics are the true foundation of a trip. Once those are locked, the rest of the trip naturally falls into place with zero stress."
+        },
+        {
+          "id": "d3",
+          "agent": "Risk",
+          "action": "Set success probability to 95%",
+          "reasoning": "With a generous timeline of 3 days and only 2 hours of total effort needed, the user is almost guaranteed to succeed if they avoid over-analyzing."
+        }
+      ],
+      "notifications": [
+        {
+          "id": "n1",
+          "title": "Let's plan an amazing getaway! ✈️",
+          "content": "Hey friend! Trip planning should be exciting, not exhausting. We've set up a super light 2-hour total plan to get you ready to go with zero stress.",
+          "type": "info"
+        },
+        {
+          "id": "n2",
+          "title": "Avoid the review rabbit hole!",
+          "content": "Quick tip: Don't get lost reading hundreds of hotel reviews. Pick 3 good ones, choose the one that feels right, and lock it in. You've got this!",
+          "type": "tip"
+        },
+        {
+          "id": "n3",
+          "title": "Almost ready to pack! 🎒",
+          "content": "Once you finish booking your stay today, the hard part is completely done. Tomorrow we'll just add a few fun spots to your list!",
+          "type": "success"
+        }
+      ],
+      "priorityScore": 59
+    },
+    {
+      "id": "pprpd0i4v",
+      "userId": "f6Cg3NkHxJT9WzEBjxDBpahE9ia2",
+      "goal": "Build a Project Report",
+      "deadline": "2026-07-03T18:00:00.000Z",
+      "title": "Build a Project Report",
+      "priority": "medium",
+      "estimatedHours": 5,
+      "dailyCapacity": 4,
+      "tags": [],
+      "createdAt": "2026-06-30T03:45:14.230Z",
+      "status": "active",
+      "confidenceScore": 67,
+      "shadowTimeline": {
+        "bestCaseHours": 4,
+        "expectedCaseHours": 5,
+        "worstCaseHours": 7
+      },
+      "milestones": [
+        {
+          "id": "milestone_1",
+          "name": "Phase I: Scoping & Setup",
+          "description": "Define tactical bounds, assemble materials, and initiate core environment setup.",
+          "deadline": "First 20% of timeline"
+        },
+        {
+          "id": "milestone_2",
+          "name": "Phase II: Direct Active Sprint",
+          "description": "Major production block focused on implementing core complexity objectives.",
+          "deadline": "Middle 60% of timeline"
+        },
+        {
+          "id": "milestone_3",
+          "name": "Phase III: Polishing & Validation",
+          "description": "Troubleshoot edge cases, polish overall aesthetics, and verify final quality checklists.",
+          "deadline": "Final 20% of timeline"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "task_1",
+          "milestoneId": "milestone_1",
+          "name": "Draft primary thesis outline, sectional headers, and bibliography index",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 45,
+          "priority": "high",
+          "order": 0,
+          "dependencies": [],
+          "reasoning": "Creating firm boundaries upfront helps avoid distraction and scope creep later.",
+          "scheduledTime": "09:00 AM",
+          "status": "todo",
+          "completedAt": null
+        },
+        {
+          "id": "task_2",
+          "milestoneId": "milestone_2",
+          "name": "Extract qualifying factual proof, direct quotes, and references from sources",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 45,
+          "priority": "medium",
+          "order": 1,
+          "dependencies": [
+            "task_1"
+          ],
+          "reasoning": "Aligned sequentially to preserve flow and handle unexpected real-world bottlenecks.",
+          "scheduledTime": "10:00 AM",
+          "status": "todo",
+          "completedAt": null
+        },
+        {
+          "id": "task_3",
+          "milestoneId": "milestone_2",
+          "name": "Author core body manuscript sections and stitch supporting inline citations",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 120,
+          "priority": "high",
+          "order": 2,
+          "dependencies": [
+            "task_2"
+          ],
+          "reasoning": "Dedicated high-duration segment allocated to solve the core architectural bottlenecks.",
+          "scheduledTime": "02:00 PM",
+          "status": "todo",
+          "completedAt": null
+        },
+        {
+          "id": "task_4",
+          "milestoneId": "milestone_2",
+          "name": "Refine logical transition paragraphs and format typography styles",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 45,
+          "priority": "medium",
+          "order": 3,
+          "dependencies": [
+            "task_3"
+          ],
+          "reasoning": "Aligned sequentially to preserve flow and handle unexpected real-world bottlenecks.",
+          "scheduledTime": "04:00 PM",
+          "status": "todo",
+          "completedAt": null
+        },
+        {
+          "id": "task_5",
+          "milestoneId": "milestone_3",
+          "name": "Execute spell-check, proofread tone, and run plagiarism clearance filters",
+          "description": "Target objective to secure milestone progression. Focus on velocity and layout consistency.",
+          "durationMinutes": 45,
+          "priority": "low",
+          "order": 4,
+          "dependencies": [
+            "task_4"
+          ],
+          "reasoning": "Aligned sequentially to preserve flow and handle unexpected real-world bottlenecks.",
+          "scheduledTime": "06:00 PM",
+          "status": "todo",
+          "completedAt": null
+        }
+      ],
+      "failurePrediction": {
+        "probability": 29,
+        "successProbability": 71,
+        "bottleneck": "Draft primary thesis outline, sectional headers, and bibliography index",
+        "reason": "Urgency strain is 35% against available capacity. Other active sibling backlog requires 2.0 hours.",
+        "suggestedFix": "Workload is dense. Restructure \"Build a Project Report\" until high priority sibling backlog of 2.0 hours is cleared."
+      },
+      "decisionLog": [
+        {
+          "id": "dec_initial_1782791116772",
+          "agent": "Orchestrating Planner",
+          "action": "Local Strategic Framework Deployed",
+          "reasoning": "The co-pilot safely established a fully-calibrated local blueprint, resolving backend service latency gracefully."
+        }
+      ],
+      "notifications": [
+        {
+          "id": "notif_1_1782791116772",
+          "title": "Standby Model Engaged",
+          "content": "Your life-saver agentic co-pilot launched a high-performance local blueprint optimized for your target goal.",
+          "type": "success"
+        },
+        {
+          "id": "notif_2_1782791116772",
+          "title": "Buffer Calibrated",
+          "content": "Workload of expected Case hours aligned and validated. Zero sign-in blocks discovered.",
+          "type": "info"
+        }
+      ],
+      "priorityScore": 67
+    }
+  ]
+}
